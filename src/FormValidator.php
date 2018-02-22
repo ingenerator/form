@@ -18,7 +18,7 @@ use Ingenerator\Form\Element\FormGroupElement;
 use Ingenerator\Form\Util\FormDataArray;
 use Ingenerator\KohanaExtras\Validation\ImmutableKohanaValidation;
 use Ingenerator\PHPUtils\Validation\StrictDate;
-use Ingenerator\Validation\ValidNumber;
+use Ingenerator\PHPUtils\Validation\ValidNumber;
 
 class FormValidator
 {

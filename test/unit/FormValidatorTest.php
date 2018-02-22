@@ -147,7 +147,7 @@ class FormValidatorTest extends \PHPUnit_Framework_TestCase
      * @testWith [[], {"digit": [":value"]}]
      *           [["required"], {"digit": [":value"], "not_empty": [":value"]}]
      *           [{"step": 1}, {"digit": [":value"]}]
-     *           [{"min": 15, "step": 1}, {"digit": [":value"], "Ingenerator\\Validation\\ValidNumber::minimum": [":value", 15]}]
+     *           [{"min": 15, "step": 1}, {"digit": [":value"], "Ingenerator\\PHPUtils\\Validation\\ValidNumber::minimum": [":value", 15]}]
      */
     public function test_it_builds_validation_with_constraints_for_number_text_field(
         $constraints,
