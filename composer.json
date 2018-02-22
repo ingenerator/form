@@ -1,0 +1,45 @@
+{
+  "name": "ingenerator/form",
+  "type": "library",
+  "description": "Schema-based form rendering / interaction",
+  "homepage": "http://github.com/ingenerator/form",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Andrew Coulton",
+      "email": "andrew@ingenerator.com",
+      "homepage": "http://ingenerator.com"
+    }
+  ],
+  "require": {
+    "php": "^5.5",
+    "kohana/core": "3.3.*",
+  },
+  "require-dev": {
+    "kohana/koharness": "*@dev",
+    "phpunit/phpunit": "^4.8"
+  },
+  "suggest": {
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://php-packages.ingenerator.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Ingenerator\\Form\\": "src/"
+    }
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "extra": {
+    "installer-paths": {
+      "vendor/{$vendor}/{$name}": [
+        "type:kohana-module"
+      ]
+    }
+  }
+}
