@@ -13,7 +13,7 @@
   ],
   "require": {
     "php": "^5.5",
-    "kohana/core": "3.3.*",
+    "kohana/core": "3.3.*"
   },
   "require-dev": {
     "kohana/koharness": "*@dev",
