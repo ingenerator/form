@@ -1,34 +1,29 @@
 <?php
 /**
- * Renders a nested repeating-group field
- * sets with the same fields
- * @var array         $field
- * @var FormDataArray $data
+ * Renders a nested repeating-group field sets with the same fields
+ * @var RepeatingGroupField $field
+ * @var FormElementRenderer $form_renderer
  */
 
-use Ingenerator\Form\Util\FormDataArray;
+use Ingenerator\Form\Element\Field\RepeatingGroupField;
+use Ingenerator\Form\Renderer\FormElementRenderer;
 
-$groups = $data->getGroupIndices($field['name']);
 ?>
-<div class="form-answer-group <?=$groups ? '' : 'answer-empty';?>">
+<div class="form-answer-group <?= $field->groups ? '' : 'answer-empty'; ?>">
     <label class="form-answer-label">
-        <?= \Arr::get($field, 'display_label', $field['label']); ?>
+        <?= $field->display_label; ?>
     </label>
-    <?php if ($groups): ?>
-        <?php foreach ($groups as $group_index): ?>
+    <?php if ($field->groups): ?>
+        <?php foreach ($field->groups as $group_fields): ?>
             <div class="form-repeating-answer">
-                <?php foreach ($field['fields'] as $subfield):
-                    $subfield['name'] = sprintf('%s[%s]%s', $field['name'], $group_index,
-                        $subfield['name']);
-                    ?>
-                    <?= View::factory('form_fields/display/'.$subfield['type'],
-                    ['field' => $subfield, 'data' => $data])->render(); ?>
+                <?php foreach ($group_fields as $child_field): ?>
+                    <?= $form_renderer->render($child_field); ?>
                 <?php endforeach; ?>
             </div>
         <?php endforeach; ?>
     <?php else: ?>
         <p class="form-answer">
-            <?=\Arr::get($field, 'empty_value', 'None entered');?>
+            <?= $field->empty_value ?: 'None entered'; ?>
         </p>
     <?php endif; ?>
 </div>

@@ -138,13 +138,13 @@ class GroupedChoiceFieldTest extends BaseFieldTest
     public function provider_value_assignment()
     {
         return [
-            ['', ['html' => '', 'selected' => '_empty_']],
-            [NULL, ['html' => '', 'selected' => '_empty_']],
-            ['Junk', ['html' => 'Junk', 'selected' => '_empty_']],
-            ['1', ['html' => '1', 'selected' => '1']],
-            ['Z', ['html' => 'Z', 'selected' => 'Z']],
-            ['3', ['html' => '3', 'selected' => '3']],
-            [3, ['html' => '3', 'selected' => '3']],
+            ['', ['html' => '', 'selected' => '_empty_', 'display' => NULL]],
+            [NULL, ['html' => '', 'selected' => '_empty_', 'display' => NULL]],
+            ['Junk', ['html' => 'Junk', 'selected' => '_empty_', 'display' => NULL]],
+            ['1', ['html' => '1', 'selected' => '1', 'display' => 'One']],
+            ['Z', ['html' => 'Z', 'selected' => 'Z', 'display' => 'Two']],
+            ['3', ['html' => '3', 'selected' => '3', 'display' => 'Three']],
+            [3, ['html' => '3', 'selected' => '3', 'display' => 'Three']],
         ];
     }
 
@@ -175,6 +175,7 @@ class GroupedChoiceFieldTest extends BaseFieldTest
         );
         $subject->assignValue(new FormDataArray(['field' => $assign]));
         $this->assertSame($expect['html'], $subject->html_value, 'Should have html value');
+        $this->assertSame($expect['display'], $subject->display_value, 'Should have display value');
         $this->assertChoiceSelected($expect['selected'], $subject);
     }
 

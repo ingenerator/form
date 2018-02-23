@@ -19,6 +19,7 @@ use Ingenerator\Form\Util\FormDataArray;
  * @property-read array    constraints
  * @property-read array    container_data
  * @property-read string   display_label
+ * @property-read string   display_value
  * @property-read string   name
  * @property-read string   help_text
  * @property-read array    hide_display_if
@@ -56,7 +57,9 @@ abstract class AbstractFormField extends AbstractFormElement implements FormValu
 
     public function __get($option)
     {
-        if ($option === 'html_value') {
+        if ($option === 'display_value') {
+            return $this->html_value ? : $this->empty_value;
+        } elseif ($option === 'html_value') {
             return $this->html_value;
         } elseif ($option === 'errors') {
             return $this->errors;

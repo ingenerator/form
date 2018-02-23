@@ -137,7 +137,6 @@ class FormElementRendererTest extends \PHPUnit_Framework_TestCase
      */
     public function test_it_selects_template_based_on_configured_render_mode($mode, $expect_output)
     {
-        $this->markTestIncomplete('This doesn\'t work, the templates are all different');
         $this->render_mode = $mode;
         $output            = $this->newSubject()->render(
             new TextField(['label' => 'What is your name?', 'name' => 'name'])

@@ -49,4 +49,22 @@ class DateField extends AbstractFormField
         $data->setFieldValue($this->name, $value);
     }
 
+    public function __get($option)
+    {
+        if ($option === 'display_value') {
+            return $this->getDisplayValue();
+        }
+
+        return parent::__get($option);
+    }
+
+    protected function getDisplayValue()
+    {
+        if ($value = $this->html_value) {
+            return DateTimeImmutableFactory::fromYmdInput($this->html_value)->format('j M Y');
+        }
+
+        return $this->empty_value;
+    }
+
 }

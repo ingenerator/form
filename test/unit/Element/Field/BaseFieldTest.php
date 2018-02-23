@@ -101,6 +101,16 @@ abstract class BaseFieldTest extends BaseFormElementTest
     }
 
     /**
+     * @testWith [{}, null]
+     *           [{"empty_value": "You didn't do this"}, "You didn't do this"]
+     */
+    public function test_its_display_value_defaults_to_empty_value_if_empty($schema, $expect)
+    {
+        $subject = $this->newSubject($schema);
+        $this->assertSame($expect, $subject->display_value);
+    }
+
+    /**
      * @param array $values
      *
      * @return AbstractFormField

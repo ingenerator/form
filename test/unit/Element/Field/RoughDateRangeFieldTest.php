@@ -73,6 +73,19 @@ class RoughDateRangeFieldTest extends BaseFieldTest
         $this->assertCollectsValues(['field' => $expect], $subject);
     }
 
+    /**
+     * @testWith [{"from": null, "to": null}, null]
+     *           [{"from": "October 2012", "to": "Jan 2016"}, "October 2012 - Jan 2016"]
+     *           [{"from": "October 2012", "to": null}, "October 2012"]
+     *           [{"to": "Jan 2016"}, "Jan 2016"]
+     */
+    public function test_it_hyphenates_range_as_display_value($post, $expect)
+    {
+        $subject = $this->newSubject(['name' => 'field']);
+        $subject->assignValue(new FormDataArray(['field' => $post]));
+        $this->assertSame($expect, $subject->display_value);
+    }
+
     public function test_what_happens_about_other_schema_values_that_dont_work_for_this_type()
     {
         $this->markTestIncomplete('What about the top-level label, empty value, other properties?');

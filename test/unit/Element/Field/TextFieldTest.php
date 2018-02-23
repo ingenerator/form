@@ -51,16 +51,17 @@ class TextFieldTest extends BaseFieldTest
     }
 
     /**
-     * @testWith [{}, ""]
-     *           [{"field": ""}, ""]
-     *           [{"field": "0"}, "0"]
-     *           [{"field": "anything"}, "anything"]
+     * @testWith [{}, "", null]
+     *           [{"field": ""}, "", null]
+     *           [{"field": "0"}, "0", null]
+     *           [{"field": "anything"}, "anything", "anything"]
      */
-    public function test_it_can_assign_value(array $values, $expect)
+    public function test_it_can_assign_value(array $values, $expect_html, $expect_display)
     {
         $subject = $this->newSubject(['name' => 'field']);
         $subject->assignValue(new FormDataArray($values));
-        $this->assertSame($expect, $subject->html_value);
+        $this->assertSame($expect_html, $subject->html_value, 'Should have html value');
+        $this->assertSame($expect_display, $subject->display_value, 'display_value should match html_value');
     }
 
     /**

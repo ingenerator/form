@@ -113,6 +113,28 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
     }
 
     /**
+     * @testWith [{"choice":"One", "detail": null}, "One"]
+     *           [{"choice":"One", "detail": "thing"}, "One"]
+     *           [{"choice":"Another", "detail": "Thing"}, "Another - Thing"]
+     *           [{"choice":"Other", "detail": "Thing"}, "Other - Thing"]
+     *           [{"choice":"Other", "detail": null}, "Other - "]
+     */
+    public function test_its_display_value_combines_both_fields_as_appropriate(
+        $value,
+        $expect_display
+    ) {
+        $subject = $this->newSubject(
+            [
+                'name'             => 'field',
+                'choices'          => ['One', 'Other', 'Another'],
+                'other_for_values' => ['Other', 'Another']
+            ]
+        );
+        $subject->assignValue(new FormDataArray(['field' => $value]));
+        $this->assertEquals($expect_display, $subject->display_value);
+    }
+
+    /**
      * @testWith [{}, {"choice":null, "detail": null}]
      *           [{"choice": "One"}, {"choice":"One", "detail": null}]
      *           [{"choice": "Other", "detail": "Red"}, {"choice":"Other", "detail": "Red"}]

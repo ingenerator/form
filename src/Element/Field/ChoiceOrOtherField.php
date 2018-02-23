@@ -56,9 +56,23 @@ class ChoiceOrOtherField extends AbstractFormField
             return $this->choice_field;
         } elseif ($option === 'detail_field') {
             return $this->detail_field;
+        } elseif ($option === 'display_value') {
+            return $this->getDisplayValue();
         }
 
         return parent::__get($option);
+    }
+
+    protected function getDisplayValue()
+    {
+        $choice = $this->choice_field->html_value;
+        if ($this->expectedDetailValueForChoice($choice)) {
+            return $this->choice_field->display_value.' - '.$this->detail_field->display_value;
+        } elseif ($this->choice_field->display_value) {
+            return $this->choice_field->display_value;
+        } else {
+            return $this->empty_value;
+        }
     }
 
     public function assignValue(FormDataArray $post)
@@ -73,7 +87,7 @@ class ChoiceOrOtherField extends AbstractFormField
         $choice_value = $data->getRawValue($this->choice_field->name);
         // Only assign the detail field value if the choice is an "other" choice - in case user
         // has changed since they assigned it and haven't seen the value in the now-hidden detail
-        if (in_array($choice_value, $this->other_for_values)) {
+        if ($this->expectedDetailValueForChoice($choice_value)) {
             $this->detail_field->collectValue($data);
         } else {
             $data->setFieldValue($this->detail_field->name, NULL);
@@ -96,6 +110,16 @@ class ChoiceOrOtherField extends AbstractFormField
             parent::listRequiredSchemaKeys(),
             ['choices', 'other_for_values']
         );
+    }
+
+    /**
+     * @param $choice_value
+     *
+     * @return bool
+     */
+    protected function expectedDetailValueForChoice($choice_value)
+    {
+        return in_array($choice_value, $this->other_for_values);
     }
 
 }

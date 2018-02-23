@@ -70,6 +70,8 @@ class ChoiceField extends AbstractFormField
         switch ($option) {
             case 'choices':
                 return $this->buildChoicesList();
+            case 'display_value':
+                return $this->getDisplayValue();
             case 'valid_values':
                 return $this->listValidValues();
             default:
@@ -110,6 +112,21 @@ class ChoiceField extends AbstractFormField
         }
 
         return $choices;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getDisplayValue()
+    {
+        $html_val = $this->html_value;
+        foreach ($this->choice_list as $choice) {
+            if ($choice['value'] === $this->html_value) {
+                return $choice['caption'];
+            }
+        }
+
+        return $this->empty_value;
     }
 
     protected function validateConstraintSchema(array $constraints)

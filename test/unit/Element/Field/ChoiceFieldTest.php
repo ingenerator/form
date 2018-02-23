@@ -208,16 +208,16 @@ class ChoiceFieldTest extends BaseFieldTest
         ];
 
         return [
-            [$choice_strings, '', ['html' => '', 'selected' => '']],
-            [$choice_strings, NULL, ['html' => '', 'selected' => '']],
-            [$choice_strings, 'Junk', ['html' => 'Junk', 'selected' => '']],
-            [$choice_strings, 'Second', ['html' => 'Second', 'selected' => 'Second']],
-            [$choice_list, '', ['html' => '', 'selected' => '']],
-            [$choice_list, NULL, ['html' => '', 'selected' => '']],
-            [$choice_list, 'Junk', ['html' => 'Junk', 'selected' => '']],
-            [$choice_list, 'One', ['html' => 'One', 'selected' => '']],
-            [$choice_list, 1, ['html' => '1', 'selected' => '1']],
-            [$choice_list, 2, ['html' => '2', 'selected' => '2']],
+            [$choice_strings, '', ['html' => '', 'selected' => '', 'display' => NULL]],
+            [$choice_strings, NULL, ['html' => '', 'selected' => '', 'display' => NULL]],
+            [$choice_strings, 'Junk', ['html' => 'Junk', 'selected' => '', 'display' => NULL]],
+            [$choice_strings, 'Second', ['html' => 'Second', 'selected' => 'Second', 'display' => 'Second']],
+            [$choice_list, '', ['html' => '', 'selected' => '', 'display' => NULL]],
+            [$choice_list, NULL, ['html' => '', 'selected' => '', 'display' => NULL]],
+            [$choice_list, 'Junk', ['html' => 'Junk', 'selected' => '', 'display' => NULL]],
+            [$choice_list, 'One', ['html' => 'One', 'selected' => '', 'display' => NULL]],
+            [$choice_list, 1, ['html' => '1', 'selected' => '1', 'display' => 'One']],
+            [$choice_list, 2, ['html' => '2', 'selected' => '2', 'display' => 'Two']],
         ];
     }
 
@@ -231,7 +231,8 @@ class ChoiceFieldTest extends BaseFieldTest
     ) {
         $subject = $this->newSubject(['name' => 'field', 'choices' => $choices]);
         $subject->assignValue(new FormDataArray(['field' => $assign_val]));
-        $this->assertSame($expect['html'], $subject->html_value);
+        $this->assertSame($expect['html'], $subject->html_value, 'Should match HTML');
+        $this->assertSame($expect['display'], $subject->display_value, 'Should match display');
         $this->assertChoiceSelected($expect['selected'], $subject->choices);
     }
 

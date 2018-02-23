@@ -77,6 +77,9 @@ class GroupedChoiceField extends AbstractFormField
             case 'choice_groups':
                 return $this->getChoiceGroupsWithSelection();
 
+            case 'display_value':
+                return $this->getDisplayValue();
+
             case 'valid_values':
                 return $this->valid_values;
 
@@ -115,6 +118,20 @@ class GroupedChoiceField extends AbstractFormField
         }
 
         return $groups;
+    }
+
+    protected function getDisplayValue()
+    {
+        foreach ($this->schema['choice_groups'] as $group) {
+            foreach ($group['choices'] as $choice) {
+                $value = (string) $choice['value'];
+                if ($value === $this->html_value) {
+                    return $choice['caption'];
+                }
+            }
+        }
+
+        return $this->empty_value;
     }
 
     protected function validateConstraintSchema(array $constraints)

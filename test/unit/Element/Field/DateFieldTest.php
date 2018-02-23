@@ -87,6 +87,25 @@ class DateFieldTest extends BaseFieldTest
         }
     }
 
+    public function provider_date_values_for_display()
+    {
+        return [
+            [NULL, NULL],
+            ['2018-02-02', '2 Feb 2018'],
+            [new \DateTimeImmutable('2018-11-13'), '13 Nov 2018']
+        ];
+    }
+
+    /**
+     * @dataProvider provider_date_values_for_display
+     */
+    public function test_it_assigns_display_value_as_day_month_year($value, $expect)
+    {
+        $subject = $this->newSubject(['name' => 'field']);
+        $subject->assignValue(new FormDataArray(['field' => $value]));
+        $this->assertEquals($expect, $subject->display_value);
+    }
+
     /**
      * @param array $values
      *
