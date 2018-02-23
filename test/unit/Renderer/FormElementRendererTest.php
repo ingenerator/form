@@ -7,6 +7,7 @@
 namespace test\unit\Ingenerator\Form\Renderer;
 
 
+use Ingenerator\Form\Criteria\FieldCriteriaMatcher;
 use Ingenerator\Form\Element\BodyTextFormElement;
 use Ingenerator\Form\Element\Field\ChoiceField;
 use Ingenerator\Form\Element\Field\TextField;
@@ -143,6 +144,48 @@ class FormElementRendererTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertContains($expect_output, $output);
+    }
+
+    public function provider_highlighter_classes()
+    {
+        return [
+            [
+                ['highlight_if' => ['empty']],
+                '',
+                'answer-highlighted answer-empty'
+            ],
+            [
+                ['hide_display_if' => ['empty']],
+                '',
+                'answer-display-hidden answer-empty'
+            ],
+            [
+                [],
+                '',
+                'answer-empty'
+            ],
+            [
+                ['highlight_if' => ['value:Bob']],
+                'Bob',
+                'answer-highlighted'
+            ],
+        ];
+    }
+
+
+    /**
+     * @dataProvider provider_highlighter_classes
+     */
+    public function test_it_can_give_highlight_classes_for_field_criteria(
+        $criteria,
+        $value,
+        $expect
+    ) {
+        $this->matcher = new FieldCriteriaMatcher;
+        $field         = new TextField(
+            array_merge(['label' => 'Name?', 'name' => 'name'], $criteria)
+        );
+        $this->assertEquals($expect, $this->newSubject()->getHighlightClasses($value, $field));
     }
 
     public function setUp()

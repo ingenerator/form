@@ -7,6 +7,7 @@
 namespace Ingenerator\Form\Renderer;
 
 
+use Ingenerator\Form\Criteria\FieldCriteriaMatcher;
 use Ingenerator\Form\Element\AbstractFormElement;
 use Ingenerator\Form\Element\Field\AbstractFormField;
 use Ingenerator\Form\Form;
@@ -32,6 +33,28 @@ class FormElementRenderer
     {
         $this->config      = $config;
         $this->render_mode = $render_mode;
+    }
+
+    /**
+     * @param string            $value
+     * @param AbstractFormField $field
+     *
+     * @return string
+     */
+    public function getHighlightClasses($value, AbstractFormField $field)
+    {
+        $matcher = new FieldCriteriaMatcher;
+        $classes = array_keys(
+            array_filter(
+                [
+                    'answer-highlighted'    => $matcher->matches($value, $field->highlight_if),
+                    'answer-display-hidden' => $matcher->matches($value, $field->hide_display_if),
+                    'answer-empty'          => $matcher->matches($value, ['empty'])
+                ]
+            )
+        );
+
+        return implode(' ', $classes);
     }
 
     /**
