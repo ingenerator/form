@@ -10,17 +10,28 @@ namespace Ingenerator\Form\Renderer;
 use Ingenerator\Form\Element\AbstractFormElement;
 use Ingenerator\Form\Element\Field\AbstractFormField;
 use Ingenerator\Form\Form;
+use Ingenerator\Form\FormConfig;
 
 class FormElementRenderer
 {
-    /**
-     * @var array
-     */
-    protected $view_map;
 
-    public function __construct(array $element_type_map)
+    /**
+     * @var string
+     */
+    protected $render_mode;
+
+    /**
+     * @var FormConfig
+     */
+    protected $template_map;
+
+    /**
+     * @param \Ingenerator\Form\FormConfig $config
+     */
+    public function __construct(FormConfig $config, $render_mode = 'edit')
     {
-        $this->view_map = array_flip($element_type_map);
+        $this->config      = $config;
+        $this->render_mode = $render_mode;
     }
 
     /**
@@ -30,16 +41,60 @@ class FormElementRenderer
      */
     public function render(AbstractFormElement $element)
     {
-        if ($element instanceof Form) {
-            $output = '';
-            foreach ($element->elements as $child) {
-                $output .= $this->renderElement($child);
-            }
-
-            return $output;
-        } else {
-            return $this->renderElement($element);
+        if ( ! $template_file = $this->findTemplateForElement($element, $this->render_mode)) {
+            throw UndefinedTemplateException::forElement($element, $this->render_mode);
         }
+
+
+        return $this->requireWithAnonymousScope($template_file, $element);
+    }
+
+    /**
+     * @param \Ingenerator\Form\Element\AbstractFormElement $element
+     * @param string                                        $mode
+     *
+     * @return string
+     */
+    protected function findTemplateForElement(AbstractFormElement $element, $mode)
+    {
+        if ($template_file = $this->config->getTemplateFile(get_class($element), $mode)) {
+            return $template_file;
+        }
+
+        if ($element instanceof Form) {
+            return $this->config->getTemplateFile(Form::class, $mode);
+        }
+
+        return NULL;
+    }
+
+    /**
+     * @param string              $template_file
+     * @param AbstractFormElement $element
+     *
+     * @return string
+     */
+    protected function requireWithAnonymousScope($template_file, AbstractFormElement $element)
+    {
+        // Create a function with no scope except the variables it gets passed
+        $bound_capture = function (
+            AbstractFormElement $field,
+            FormElementRenderer $form_renderer,
+            $template_file
+        ) {
+            require $template_file;
+        };
+        $anon_capture  = $bound_capture->bindTo(NULL);
+
+        // Render the template
+        ob_start();
+        try {
+            $anon_capture($element, $this, $template_file);
+        } finally {
+            $output = ob_get_clean();
+        }
+
+        return $output;
     }
 
     /**
@@ -50,22 +105,5 @@ class FormElementRenderer
     public function renderConstraintsAttributes(AbstractFormField $field)
     {
         return \HTML::attributes($field->constraints);
-    }
-
-    /**
-     * @param \Ingenerator\Form\Element\AbstractFormElement $element
-     *
-     * @return string
-     */
-    protected function renderElement(AbstractFormElement $element)
-    {
-        if ( ! $view_name = \Arr::get($this->view_map, get_class($element))) {
-            throw new \OutOfBoundsException('No mapped view for form element '.get_class($element));
-        }
-
-        return \View::factory(
-            'form_fields/edit/'.$view_name,
-            ['field' => $element, 'form_renderer' => $this]
-        )->render();
     }
 }
