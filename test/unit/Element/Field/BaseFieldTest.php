@@ -40,7 +40,9 @@ abstract class BaseFieldTest extends BaseFormElementTest
         return [
             ['container_data', [], ['data-showgroup', 'data-show' => 'stuff']],
             ['empty_value', NULL, 'your name here'],
-            ['help_text', NULL, 'some <em>help</em> text']
+            ['help_text', NULL, 'some <em>help</em> text'],
+            ['highlight_if', [], ['empty']],
+            ['hide_display_if', [], ['value:anything']],
         ];
     }
 
@@ -67,22 +69,6 @@ abstract class BaseFieldTest extends BaseFormElementTest
     ) {
         $subject = $this->newSubject($options);
         $this->assertSame($expect, $subject->display_label);
-    }
-
-    /**
-     * @testWith ["highlight_if"]
-     *           ["hide_display_if"]
-     */
-    public function test_it_ignores_display_highlight_schema($field)
-    {
-        // NB: this is temporary behaviour till we work out what this should actually do.
-        $subject = $this->newSubject([$field => 'value']);
-        try {
-            $foo = $subject->$field;
-            $this->fail("Should throw on attempt to access a $field property");
-        } catch (\OutOfBoundsException $e) {
-            // Expected
-        }
     }
 
     /**

@@ -21,6 +21,8 @@ use Ingenerator\Form\Util\FormDataArray;
  * @property-read string   display_label
  * @property-read string   name
  * @property-read string   help_text
+ * @property-read array    hide_display_if
+ * @property-read array    highlight_if
  * @property-read string   empty_value
  * @property-read string   html_value
  * @property-read string[] errors
@@ -32,8 +34,6 @@ abstract class AbstractFormField extends AbstractFormElement implements FormValu
 
     public function __construct(array $schema)
     {
-        unset($schema['hide_display_if']);
-        unset($schema['highlight_if']);
         if ( ! \Arr::get($schema, 'display_label')) {
             $schema['display_label'] = \Arr::get($schema, 'label');
         }
@@ -85,14 +85,16 @@ abstract class AbstractFormField extends AbstractFormElement implements FormValu
     protected function getDefaultSchema()
     {
         return [
-            'id'             => uniqid('field'),
-            'label'          => NULL,
-            'display_label'  => NULL,
-            'help_text'      => NULL,
-            'name'           => NULL,
-            'empty_value'    => NULL,
-            'constraints'    => [],
-            'container_data' => []
+            'id'              => uniqid('field'),
+            'label'           => NULL,
+            'display_label'   => NULL,
+            'hide_display_if' => [],
+            'highlight_if'    => [],
+            'help_text'       => NULL,
+            'name'            => NULL,
+            'empty_value'     => NULL,
+            'constraints'     => [],
+            'container_data'  => []
         ];
     }
 
