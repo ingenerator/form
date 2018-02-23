@@ -161,7 +161,7 @@ class FormElementRendererTest extends \PHPUnit_Framework_TestCase
      */
     protected function getElementFactory()
     {
-        return new FormElementFactory(\Kohana::$config->load('form.element_type_map'));
+        return new FormElementFactory(FormConfig::withDefaults());
     }
 
 }

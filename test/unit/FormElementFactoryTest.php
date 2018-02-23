@@ -11,11 +11,15 @@ use Ingenerator\Form\Element\Field\AbstractFormField;
 use Ingenerator\Form\Element\Field\RoughDateRangeField;
 use Ingenerator\Form\Element\Field\TextareaField;
 use Ingenerator\Form\Element\Field\TextField;
+use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 
 class FormElementFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    protected $mapping = [];
+    /**
+     * @var \Ingenerator\Form\FormConfig
+     */
+    protected $config;
 
     public function test_it_is_initialisable()
     {
@@ -31,11 +35,11 @@ class FormElementFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \OutOfBoundsException
+     * @expectedException Ingenerator\Form\UndefinedFieldTypeException
      */
     public function test_it_throws_if_field_type_is_not_mapped()
     {
-        $this->mapping = [];
+        $this->config = FormConfig::withDefaults(['element_type_map' => ['text' => NULL]]);
         $this->newSubject()->make([['type' => 'text']]);
     }
 
@@ -46,8 +50,10 @@ class FormElementFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_it_makes_single_instance_of_mapped_type()
     {
-        $this->mapping = ['text' => TextField::class];
-        $elements      = $this->newSubject()->make(
+        $this->config = FormConfig::withDefaults(
+            ['element_type_map' => ['text' => TextField::class]]
+        );
+        $elements     = $this->newSubject()->make(
             [
                 ['type' => 'text', 'name' => 'email', 'label' => 'Email']
             ]
@@ -58,8 +64,10 @@ class FormElementFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_it_makes_array_of_instances_of_mapped_types()
     {
-        $this->mapping = ['text' => TextField::class, 'textarea' => TextareaField::class];
-        $elements      = $this->newSubject()->make(
+        $this->config = FormConfig::withDefaults(
+            ['element_type_map' => ['text' => TextField::class, 'textarea' => TextareaField::class]]
+        );
+        $elements     = $this->newSubject()->make(
             [
                 ['type' => 'text', 'name' => 'email', 'label' => 'Email'],
                 ['type' => 'textarea', 'name' => 'info', 'label' => 'Information']
@@ -72,23 +80,26 @@ class FormElementFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_it_makes_instances_of_elements_that_need_the_factory()
     {
-        $this->mapping = [
-            'text'             => TextField::class,
-            'rough-date-range' => RoughDateRangeField::class
-        ];
-        $elements      = $this->newSubject()->make(
+        $this->config = FormConfig::withDefaults();
+        $elements     = $this->newSubject()->make(
             [['type' => 'rough-date-range', 'name' => 'dates']]
         );
         $this->assertCount(1, $elements);
         $this->assertFieldInstanceNamed(RoughDateRangeField::class, 'dates', $elements[0]);
     }
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->config = FormConfig::withDefaults();
+    }
+    
     /**
      * @return \Ingenerator\Form\FormElementFactory
      */
     protected function newSubject()
     {
-        return new FormElementFactory($this->mapping);
+        return new FormElementFactory($this->config);
     }
 
     protected function assertFieldInstanceNamed(

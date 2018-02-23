@@ -131,6 +131,14 @@ class FormConfig
         return \Arr::get($templates, $mode);
     }
 
+    /**
+     * @return string[]
+     */
+    public function listDefinedElementTypes()
+    {
+        return array_keys(array_filter($this->config['element_type_map']));
+    }
+
     public function validate()
     {
         $errors = array_merge(

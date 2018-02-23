@@ -58,6 +58,16 @@ class FormConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $subject->getElementClass($type));
     }
 
+    public function test_it_lists_defined_types()
+    {
+        $this->config['element_type_map'] = [
+            'text'   => 'My\TextFieldClass',
+            'choice' => 'My\ChoiceFieldClass',
+            'crazy'  => NULL,
+        ];
+        $this->assertEquals(['text', 'choice'], $this->newSubject()->listDefinedElementTypes());
+    }
+
     /**
      * @testWith ["My\\TextFieldClass", "edit", "/path/to/edit/text.php"]
      *           ["My\\ChoiceFieldClass", "edit", "/path/to/edit/choice.php"]

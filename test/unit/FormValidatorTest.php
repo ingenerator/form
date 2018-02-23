@@ -8,6 +8,7 @@ namespace test\unit\Ingenerator\Form;
 
 
 use Ingenerator\Form\Form;
+use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\FormValidator;
 use Ingenerator\KohanaExtras\Validation\TestConstraint\ValidationRulesMatch;
@@ -16,18 +17,6 @@ use test\unit\BaseTestCase;
 
 class FormValidatorTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @return string[]
-     */
-    protected static function type_map()
-    {
-        static $map;
-        if ( ! $map) {
-            $map = \Kohana::$config->load('form.element_type_map');
-        }
-
-        return $map;
-    }
 
     public function test_it_is_initialisable()
     {
@@ -55,7 +44,7 @@ class FormValidatorTest extends \PHPUnit_Framework_TestCase
         // In order to implement support for a new constraint, add a simple example of it to the
         // provider_supported_field_types. Any defined field types that are not in there will be
         // added to the automatic `unsupported` list.
-        $all_types = array_keys(static::type_map());
+        $all_types = FormConfig::withDefaults()->listDefinedElementTypes();
         $supported = ['body-text'];
         foreach ($this->provider_supported_field_types() as $supported_type) {
             $supported[] = $supported_type[0]['type'];
@@ -540,7 +529,7 @@ class FormValidatorTest extends \PHPUnit_Framework_TestCase
 
         return new Form(
             ['elements' => $elements],
-            new FormElementFactory(static::type_map())
+            new FormElementFactory(FormConfig::withDefaults())
         );
     }
 

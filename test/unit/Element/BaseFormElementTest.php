@@ -7,6 +7,7 @@
 namespace test\unit\Ingenerator\Form\Element;
 
 
+use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\Util\FormDataArray;
 
@@ -144,6 +145,6 @@ abstract class BaseFormElementTest extends \PHPUnit_Framework_TestCase
      */
     protected function getElementFactory()
     {
-        return new FormElementFactory(\Kohana::$config->load('form.element_type_map'));
+        return new FormElementFactory(FormConfig::withDefaults());
     }
 }

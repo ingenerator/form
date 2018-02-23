@@ -3,6 +3,7 @@
  * @author    Andrew Coulton <andrew@ingenerator.com>
  * @licence   proprietary
  */
+
 namespace Ingenerator\Form;
 
 use Ingenerator\Form\Element\AbstractFormElement;
@@ -11,16 +12,16 @@ class FormElementFactory
 {
 
     /**
-     * @var string[]
+     * @var \Ingenerator\Form\FormConfig
      */
-    protected $element_type_map;
+    protected $config;
 
     /**
-     * @param string[] $element_type_map
+     * @param \Ingenerator\Form\FormConfig $config
      */
-    public function __construct(array $element_type_map)
+    public function __construct(FormConfig $config)
     {
-        $this->element_type_map = $element_type_map;
+        $this->config = $config;
     }
 
     /**
@@ -52,8 +53,8 @@ class FormElementFactory
             );
         }
 
-        if ( ! $class = \Arr::get($this->element_type_map, $type)) {
-            throw new \OutOfBoundsException("Undefined form element type $type");
+        if ( ! $class = $this->config->getElementClass($type)) {
+            throw UndefinedFieldTypeException::withType($type);
         }
 
         return new $class($element_schema, $this);
