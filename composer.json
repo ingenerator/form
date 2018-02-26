@@ -22,6 +22,7 @@
     "phpunit/phpunit": "^4.8"
   },
   "suggest": {
+    "ingenerator/showgroup": "javascript support to show/hide form sections based on values"
   },
   "repositories": [
     {

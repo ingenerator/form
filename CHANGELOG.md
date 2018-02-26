@@ -1,5 +1,6 @@
 ### Unreleased
 
+* Add ShowgroupHelper
 * Add all form classes to the dependency container with FormDependencyFactory
 * Add FormEditRenderer and FormDisplayRenderer interfaces : currently these are 
   both implemented by FormElementRenderer, but depend on them instead where possible
