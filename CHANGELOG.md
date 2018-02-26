@@ -1,5 +1,7 @@
 ### Unreleased
 
+## v0.1.0 (2018-02-26)
+
 * Add ShowgroupHelper
 * Add all form classes to the dependency container with FormDependencyFactory
 * Add FormEditRenderer and FormDisplayRenderer interfaces : currently these are 
