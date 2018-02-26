@@ -20,8 +20,11 @@ require_once __DIR__.'/../vendor/kohana/koharness/helper_classes/Session/Fake.ph
 \Session::$default = 'fake';
 \Session::$instances['fake'] = new Session_Fake;
 
+// Require base dependency test from kohana-extras
+require_once __DIR__.'/../vendor/ingenerator/kohana-extras/test/unit/DependencyFactory/AbstractDependencyFactoryTest.php';
+
 // Autoload mocks and test-support helpers that should not autoload in the main app
 $mock_loader = new \Composer\Autoload\ClassLoader;
-$mock_loader->addPsr4('test\\mock\\Ingenerator\\KohanaExtras\\', [__DIR__.'/mock/']);
-$mock_loader->addPsr4('test\\unit\\Ingenerator\\KohanaExtras\\', [__DIR__.'/unit/']);
+$mock_loader->addPsr4('test\\mock\\Ingenerator\\Form\\', [__DIR__.'/mock/']);
+$mock_loader->addPsr4('test\\unit\\Ingenerator\\Form\\', [__DIR__.'/unit/']);
 $mock_loader->register();
