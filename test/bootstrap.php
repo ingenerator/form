@@ -15,29 +15,6 @@ file_put_contents(
 );
 Kohana_Exception::$error_view = 'text-error';
 
-
-// @todo: workaround - break the hard depencency on overall kohana config
-file_put_contents(
-    APPPATH.'/config/form.php',
-    '<?php return '.var_export(
-        [
-            'element_type_map' => [
-                'body-text'        => Ingenerator\Form\Element\BodyTextFormElement::class,
-                'choice'           => Ingenerator\Form\Element\Field\ChoiceField::class,
-                'choice-or-other'  => Ingenerator\Form\Element\Field\ChoiceOrOtherField::class,
-                'date'             => Ingenerator\Form\Element\Field\DateField::class,
-                'group'            => Ingenerator\Form\Element\FormGroupElement::class,
-                'grouped-choice'   => Ingenerator\Form\Element\Field\GroupedChoiceField::class,
-                'repeating-group'  => Ingenerator\Form\Element\Field\RepeatingGroupField::class,
-                'rough-date-range' => Ingenerator\Form\Element\Field\RoughDateRangeField::class,
-                'text'             => Ingenerator\Form\Element\Field\TextField::class,
-                'textarea'         => Ingenerator\Form\Element\Field\TextareaField::class,
-            ]
-        ],
-        TRUE
-    ).';'
-);
-
 // Require fake session implementation from Koharness to avoid errors in unit tests
 require_once __DIR__.'/../vendor/kohana/koharness/helper_classes/Session/Fake.php';
 \Session::$default = 'fake';
