@@ -1,5 +1,8 @@
 ### Unreleased
 
+* Add FormEditRenderer and FormDisplayRenderer interfaces : currently these are 
+  both implemented by FormElementRenderer, but depend on them instead where possible
+  to avoid a potential future breaking change to rendering.
 * Add `display_value` to all fields and use this for rendering in the display-mode
   templates.
 * Provide helper method on FormElementRenderer to provide the criteria-based highlight classes

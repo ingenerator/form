@@ -13,7 +13,7 @@ use Ingenerator\Form\Element\Field\AbstractFormField;
 use Ingenerator\Form\Form;
 use Ingenerator\Form\FormConfig;
 
-class FormElementRenderer
+class FormElementRenderer implements FormEditRenderer, FormDisplayRenderer
 {
 
     /**
