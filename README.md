@@ -1,6 +1,6 @@
 A schema-based form rendering and interaction library
 
-[![Build Status](https://travis-ci.org/ingenerator/form.svg?branch=0.1.x)](https://travis-ci.org/ingenerator/form)
+[![Build Status](https://travis-ci.org/ingenerator/form.svg?branch=0.2.x)](https://travis-ci.org/ingenerator/form)
 
 ## Schema-based?
 
