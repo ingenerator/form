@@ -1,5 +1,9 @@
 ### Unreleased
 
+## v0.2.0 (2018-03-13)
+
+* Switch to using the inGenerator kohana fork and updated kohana-extras
+
 ## v0.1.0 (2018-02-26)
 
 * Add ShowgroupHelper
