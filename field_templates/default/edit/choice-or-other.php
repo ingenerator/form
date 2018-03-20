@@ -8,7 +8,7 @@
 
 use Ingenerator\Form\Element\Field\ChoiceOrOtherField;
 use Ingenerator\Form\Renderer\FormElementRenderer;
-use View\Helper\ShowgroupHelper;
+use Ingenerator\Form\Util\ShowgroupHelper;
 
 $length_class = $field->length ? 'form-control-'.$field->length.'-text' : '';
 $showgroup    = new ShowgroupHelper($field->choice_field->html_value);

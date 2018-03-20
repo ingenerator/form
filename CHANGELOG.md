@@ -1,5 +1,9 @@
 ### Unreleased
 
+## v0.2.1 (2018-03-20)
+
+* Fix reference to ShowgroupHelper in field templates
+
 ## v0.2.0 (2018-03-13)
 
 * Switch to using the inGenerator kohana fork and updated kohana-extras
