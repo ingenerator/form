@@ -76,7 +76,8 @@ class FormConfig
                         'edit' => $tpl_dir.'/edit/date.php',
                     ],
                     Form::class                => [
-                        'edit' => $tpl_dir.'/edit/form.php',
+                        'edit'    => $tpl_dir.'/edit/form.php',
+                        'display' => $tpl_dir.'/display/form.php',
                     ],
                     FormGroupElement::class    => [
                         'edit' => $tpl_dir.'/edit/group.php',

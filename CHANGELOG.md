@@ -1,5 +1,9 @@
 ### Unreleased
 
+## v0.2.2 (2018-03-20)
+
+* Allow render of entire form in display mode
+
 ## v0.2.1 (2018-03-20)
 
 * Fix reference to ShowgroupHelper in field templates
