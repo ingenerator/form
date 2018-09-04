@@ -18,6 +18,7 @@
     "ingenerator/kohana-extras": "^0.3"
   },
   "require-dev": {
+    "johnkary/phpunit-speedtrap": "^1.0||^3.0",
     "kohana/koharness": "*@dev",
     "phpunit/phpunit": "^4.8||^7.0"
   },
