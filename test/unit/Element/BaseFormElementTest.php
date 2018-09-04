@@ -11,7 +11,7 @@ use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\Util\FormDataArray;
 
-abstract class BaseFormElementTest extends \PHPUnit_Framework_TestCase
+abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
 {
 
     public function provider_required_options()

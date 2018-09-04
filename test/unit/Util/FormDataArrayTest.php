@@ -9,7 +9,7 @@ namespace test\unit\Ingenerator\Form\Util;
 
 use Ingenerator\Form\Util\FormDataArray;
 
-class FormDataArrayTest extends \PHPUnit_Framework_TestCase
+class FormDataArrayTest extends \PHPUnit\Framework\TestCase
 {
 
     public function test_it_is_initialisable()

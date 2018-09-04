@@ -14,7 +14,7 @@ use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 
-class FormElementFactoryTest extends \PHPUnit_Framework_TestCase
+class FormElementFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Ingenerator\Form\FormConfig

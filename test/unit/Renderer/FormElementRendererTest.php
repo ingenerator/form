@@ -17,7 +17,7 @@ use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\Renderer\FormElementRenderer;
 
-class FormElementRendererTest extends \PHPUnit_Framework_TestCase
+class FormElementRendererTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

@@ -13,7 +13,7 @@ use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\Element\FormGroupElement;
 use Ingenerator\Form\FormConfig;
 
-class FormConfigTest extends \PHPUnit_Framework_TestCase
+class FormConfigTest extends \PHPUnit\Framework\TestCase
 {
     protected $config = [
         'element_type_map' => [],

@@ -9,7 +9,7 @@ namespace test\unit\Teamdetails\Form\Criteria;
 
 use Ingenerator\Form\Criteria\FieldCriteriaMatcher;
 
-class FieldCriteriaMatcherTest extends \PHPUnit_Framework_TestCase {
+class FieldCriteriaMatcherTest extends \PHPUnit\Framework\TestCase {
 
     public function test_it_is_initialisable()
     {

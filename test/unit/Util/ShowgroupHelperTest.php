@@ -9,7 +9,7 @@ namespace test\unit\Ingenerator\Form\Helper;
 
 use Ingenerator\Form\Util\ShowgroupHelper;
 
-class ShowgroupHelperTest extends \PHPUnit_Framework_TestCase {
+class ShowgroupHelperTest extends \PHPUnit\Framework\TestCase {
 
     protected $value;
 
