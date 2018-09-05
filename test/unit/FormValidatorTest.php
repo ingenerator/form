@@ -15,7 +15,7 @@ use Ingenerator\KohanaExtras\Validation\TestConstraint\ValidationRulesMatch;
 use Ingenerator\PHPUtils\Object\ObjectPropertyRipper;
 use test\unit\BaseTestCase;
 
-class FormValidatorTest extends \PHPUnit_Framework_TestCase
+class FormValidatorTest extends \PHPUnit\Framework\TestCase
 {
 
     public function test_it_is_initialisable()

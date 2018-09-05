@@ -18,8 +18,9 @@
     "ingenerator/kohana-extras": "^0.3"
   },
   "require-dev": {
+    "johnkary/phpunit-speedtrap": "^1.0||^2.0",
     "kohana/koharness": "*@dev",
-    "phpunit/phpunit": "^4.8"
+    "phpunit/phpunit": "^4.8||^6.0"
   },
   "suggest": {
     "ingenerator/showgroup": "javascript support to show/hide form sections based on values"

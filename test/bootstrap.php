@@ -28,3 +28,7 @@ $mock_loader = new \Composer\Autoload\ClassLoader;
 $mock_loader->addPsr4('test\\mock\\Ingenerator\\Form\\', [__DIR__.'/mock/']);
 $mock_loader->addPsr4('test\\unit\\Ingenerator\\Form\\', [__DIR__.'/unit/']);
 $mock_loader->register();
+
+if ( ! class_exists('\PHPUnit\Framework\Constraint\Constraint')) {
+    class_alias('PHPUnit_Framework_Constraint', '\PHPUnit\Framework\Constraint\Constraint');
+}
