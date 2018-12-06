@@ -1,7 +1,12 @@
 ### Unreleased
 
+## v0.2.4 (2018-12-06)
+
+* Support kohana-extras 0.4
+
 ## v0.2.3 (2018-09-04)
- * Switch to namespaced PHPUnit classes
+
+* Switch to namespaced PHPUnit classes
 
 ## v0.2.2 (2018-03-20)
 
