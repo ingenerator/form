@@ -19,7 +19,7 @@ use Ingenerator\Form\Renderer\FormElementRenderer;
                     <input type="radio"
                            name="<?= $field->name; ?>"
                            value="<?= $choice['value']; ?>"
-                        <?= $choice['selected']; ?>
+                        <?= $choice['selected'] ? 'checked' : ''; ?>
                         <?= $choice['disabled']; ?>
                         <?= $form_renderer->renderConstraintsAttributes($field); ?>
                     >
