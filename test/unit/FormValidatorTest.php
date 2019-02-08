@@ -33,6 +33,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
             [['type' => 'grouped-choice']],
             [['type' => 'group']],
             [['type' => 'choice']],
+            [['type' => 'choice-radio']],
         ];
     }
 
@@ -241,6 +242,31 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         $form    = $this->givenFormWithElements(
             [
                 'type'        => 'choice',
+                'constraints' => $constraints,
+                'choices'     => [
+                    ['value' => 1, 'caption' => 'One'],
+                    ['value' => 9, 'caption' => 'Nine'],
+                    ['value' => 8, 'caption' => 'Eight'],
+                ],
+                'name'        => 'some_choice',
+            ]
+        );
+        $subject = $this->newSubject();
+        $subject->validate($form);
+        $this->assertBuildsValidationWithRules(['some_choice' => $expect], $subject);
+    }
+
+    /**
+     * @testWith [[], {"in_array": [":value", [1,9,8]]}]
+     *           [["required"], {"in_array": [":value", [1,9,8]], "not_empty": [":value"]}]
+     */
+    public function test_it_builds_validation_with_constraints_for_choice_radio(
+        $constraints,
+        $expect
+    ) {
+        $form    = $this->givenFormWithElements(
+            [
+                'type'        => 'choice-radio',
                 'constraints' => $constraints,
                 'choices'     => [
                     ['value' => 1, 'caption' => 'One'],
@@ -478,6 +504,11 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
                 'name'             => 'choice_or_other',
                 'choices'          => ['One'],
                 'other_for_values' => ['One', 'Two'],
+            ],
+            'choice-radio'           => [
+                'label'   => 'Choice Radio',
+                'name'    => 'choice_radio',
+                'choices' => ['One'],
             ],
             'date'             => [
                 'label' => 'Any date',

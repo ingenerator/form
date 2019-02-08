@@ -10,6 +10,7 @@ namespace Ingenerator\Form;
 use Ingenerator\Form\Element\BodyTextFormElement;
 use Ingenerator\Form\Element\Field\AbstractFormField;
 use Ingenerator\Form\Element\Field\ChoiceField;
+use Ingenerator\Form\Element\Field\ChoiceRadioField;
 use Ingenerator\Form\Element\Field\DateField;
 use Ingenerator\Form\Element\Field\GroupedChoiceField;
 use Ingenerator\Form\Element\Field\TextareaField;
@@ -110,6 +111,7 @@ class FormValidator
         } elseif ($element instanceof GroupedChoiceField) {
             $this->addGroupedChoiceFieldRules($element);
         } elseif ($element instanceof ChoiceField) {
+            // Includes child ChoiceRadioField
             $this->addChoiceFieldRules($element);
         } elseif ($element instanceof FormGroupElement) {
             $this->addRulesForGroupFields($element);
