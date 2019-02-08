@@ -1,5 +1,7 @@
 ### Unreleased
 
+## v0.2.5 (2019-01-08)
+
 * Support choice-radio fields
 
 ## v0.2.4 (2018-12-06)
