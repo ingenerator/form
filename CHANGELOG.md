@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Support choice-radio fields
+
 ## v0.2.4 (2018-12-06)
 
 * Support kohana-extras 0.4

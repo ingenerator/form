@@ -9,6 +9,7 @@ namespace Ingenerator\Form;
 use Ingenerator\Form\Element\BodyTextFormElement;
 use Ingenerator\Form\Element\Field\ChoiceField;
 use Ingenerator\Form\Element\Field\ChoiceOrOtherField;
+use Ingenerator\Form\Element\Field\ChoiceRadioField;
 use Ingenerator\Form\Element\Field\DateField;
 use Ingenerator\Form\Element\Field\GroupedChoiceField;
 use Ingenerator\Form\Element\Field\RepeatingGroupField;
@@ -50,6 +51,7 @@ class FormConfig
                 'element_type_map' => [
                     'body-text'        => BodyTextFormElement::class,
                     'choice'           => ChoiceField::class,
+                    'choice-radio'     => ChoiceRadioField::class,
                     'choice-or-other'  => ChoiceOrOtherField::class,
                     'date'             => DateField::class,
                     'group'            => FormGroupElement::class,
@@ -66,6 +68,10 @@ class FormConfig
                     ],
                     ChoiceField::class         => [
                         'edit'    => $tpl_dir.'/edit/choice.php',
+                        'display' => $tpl_dir.'/display/text.php'
+                    ],
+                    ChoiceRadioField::class    => [
+                        'edit'    => $tpl_dir.'/edit/choice-radio.php',
                         'display' => $tpl_dir.'/display/text.php'
                     ],
                     ChoiceOrOtherField::class  => [
@@ -103,7 +109,7 @@ class FormConfig
                     ],
                 ],
             ],
-            $override ? : []
+            $override ?: []
         );
 
         return new static($config);

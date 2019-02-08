@@ -229,7 +229,9 @@ class ChoiceFieldTest extends BaseFieldTest
         $assign_val,
         $expect
     ) {
-        $subject = $this->newSubject(['name' => 'field', 'choices' => $choices]);
+        $subject = $this->newSubject(
+            ['name' => 'field', 'choices' => $choices, 'add_empty_choice' => TRUE]
+        );
         $subject->assignValue(new FormDataArray(['field' => $assign_val]));
         $this->assertSame($expect['html'], $subject->html_value, 'Should match HTML');
         $this->assertSame($expect['display'], $subject->display_value, 'Should match display');
