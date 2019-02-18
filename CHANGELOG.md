@@ -1,5 +1,9 @@
 ### Unreleased
 
+* Support customisable placeholder text on the `choice-or-other` field (defaults to the 
+  previously-hardcoded 'Please state')
+* Support the `add_empty_choice` option on choice-or-other fields (defaults to true for BC)
+
 ## v0.2.5 (2019-01-08)
 
 * Support choice-radio fields

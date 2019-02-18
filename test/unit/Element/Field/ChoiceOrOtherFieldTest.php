@@ -34,6 +34,8 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
     {
         $options   = parent::provider_valid_options_and_defaults();
         $options[] = ['length', NULL, 'short'];
+        $options[] = ['add_empty_choice', TRUE, FALSE];
+        $options[] = ['detail_field_placeholder', 'Please state', 'Tell us more'];
 
         return $options;
     }
@@ -67,6 +69,21 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
             ))->choices,
             $subject->choice_field->choices
         );
+    }
+
+    /**
+     * @testWith [true, ["", "No", "Yes"]]
+     *           [false, ["No", "Yes"]]
+     */
+    public function test_it_propogates_add_empty_choice_option_to_the_choice_subfield($add_empty, $expect_choices)
+    {
+        $subject = $this->newSubject(
+            [
+                'add_empty_choice' => $add_empty,
+                'choices' => ['No', 'Yes']
+            ]
+        );
+        $this->assertSame($expect_choices, \Arr::pluck($subject->choice_field->choices, 'value'));
     }
 
     public function test_it_has_text_subfield_for_detail()
