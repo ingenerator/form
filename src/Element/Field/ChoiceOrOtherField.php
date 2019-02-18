@@ -3,6 +3,7 @@
  * @author    Andrew Coulton <andrew@ingenerator.com>
  * @licence   proprietary
  */
+
 namespace Ingenerator\Form\Element\Field;
 
 use Ingenerator\Form\FormElementFactory;
@@ -34,11 +35,12 @@ class ChoiceOrOtherField extends AbstractFormField
         list($this->choice_field, $this->detail_field) = $element_factory->make(
             [
                 [
-                    'type'    => 'choice',
-                    'name'    => $this->name.'[choice]',
-                    'label'   => $this->label,
-                    'length'  => $this->length,
-                    'choices' => $schema['choices']
+                    'type'             => 'choice',
+                    'name'             => $this->name.'[choice]',
+                    'label'            => $this->label,
+                    'length'           => $this->length,
+                    'choices'          => $schema['choices'],
+                    'add_empty_choice' => $this->schema['add_empty_choice']
                 ],
                 [
                     'type'   => 'text',
@@ -100,6 +102,7 @@ class ChoiceOrOtherField extends AbstractFormField
         $default['length']           = NULL;
         $default['choices']          = NULL;
         $default['other_for_values'] = NULL;
+        $default['add_empty_choice'] = TRUE;
 
         return $default;
     }

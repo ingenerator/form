@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Support the `add_empty_choice` option on choice-or-other fields (defaults to true for BC)
+
 ## v0.2.5 (2019-01-08)
 
 * Support choice-radio fields
