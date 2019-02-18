@@ -35,6 +35,7 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
         $options   = parent::provider_valid_options_and_defaults();
         $options[] = ['length', NULL, 'short'];
         $options[] = ['add_empty_choice', TRUE, FALSE];
+        $options[] = ['detail_field_placeholder', 'Please state', 'Tell us more'];
 
         return $options;
     }

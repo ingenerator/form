@@ -14,6 +14,7 @@ use Ingenerator\Form\Util\FormDataArray;
  *
  * @property-read ChoiceField choice_field
  * @property-read TextField   detail_field
+ * @property-read string      detail_field_placeholder
  * @property-read string      length
  * @property-read string[]    other_for_values
  */
@@ -98,11 +99,12 @@ class ChoiceOrOtherField extends AbstractFormField
 
     protected function getDefaultSchema()
     {
-        $default                     = parent::getDefaultSchema();
-        $default['length']           = NULL;
-        $default['choices']          = NULL;
-        $default['other_for_values'] = NULL;
-        $default['add_empty_choice'] = TRUE;
+        $default                             = parent::getDefaultSchema();
+        $default['length']                   = NULL;
+        $default['choices']                  = NULL;
+        $default['other_for_values']         = NULL;
+        $default['add_empty_choice']         = TRUE;
+        $default['detail_field_placeholder'] = 'Please state';
 
         return $default;
     }

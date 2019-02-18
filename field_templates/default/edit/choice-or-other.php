@@ -41,7 +41,7 @@ $showgroup    = new ShowgroupHelper($field->choice_field->html_value);
                    class="form-control <?= $length_class; ?>"
                    name="<?= $field->detail_field->name; ?>"
                    value="<?= HTML::chars($field->detail_field->html_value); ?>"
-                   placeholder="Please state"
+                   placeholder="<?=HTML::chars($field->detail_field_placeholder);?>"
             >
         </div>
     </div>
