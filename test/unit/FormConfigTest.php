@@ -161,23 +161,29 @@ class FormConfigTest extends \PHPUnit\Framework\TestCase
 
     public function test_is_valid_with_default_config()
     {
-        FormConfig::withDefaults()->validate();
+        $this->assertNull(
+            FormConfig::withDefaults()->validate(),
+            'Validate returns null without throwing'
+        );
     }
 
     public function test_is_valid_when_custom_config_is_valid()
     {
-        FormConfig::withDefaults(
-            [
-                'element_type_map' => [
-                    'stdclass' => \stdClass::class
-                ],
-                'template_map'     => [
-                    \stdClass::class => [
-                        'edit' => __FILE__
+        $this->assertNull(
+            FormConfig::withDefaults(
+                [
+                    'element_type_map' => [
+                        'stdclass' => \stdClass::class
+                    ],
+                    'template_map'     => [
+                        \stdClass::class => [
+                            'edit' => __FILE__
+                        ]
                     ]
                 ]
-            ]
-        )->validate();
+            )->validate(),
+            'Validate returns null without throwing'
+        );
     }
 
     /**

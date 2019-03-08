@@ -1,5 +1,9 @@
 ### Unreleased
 
+## v0.2.7 (2019-03-08)
+
+* Fix all risky tests by adding sensible assertions
+
 ## v0.2.6 (2019-02-18)
 
 * Support customisable placeholder text on the `choice-or-other` field (defaults to the 
