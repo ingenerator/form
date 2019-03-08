@@ -18,7 +18,7 @@ class FieldCriteriaMatcherTest extends \PHPUnit\Framework\TestCase {
 
     public function test_it_does_not_match_anything_with_no_criteria()
     {
-        $this->newSubject()->matches('foo', []);
+        $this->assertFalse($this->newSubject()->matches('foo', []));
     }
 
     /**

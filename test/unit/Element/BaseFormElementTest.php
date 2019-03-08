@@ -7,6 +7,7 @@
 namespace test\unit\Ingenerator\Form\Element;
 
 
+use Ingenerator\Form\Element\AbstractFormElement;
 use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\Util\FormDataArray;
@@ -84,12 +85,7 @@ abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
         // NB: removing this from the array might be problematic if we want to persist a collection
         // of field schemas back to an array....
         $subject = $this->newSubject(['_comment' => 'Some info to make the schema make sense']);
-        try {
-            $foo = $subject->_comment;
-            $this->fail('Should throw on attempt to access a _comment property');
-        } catch (\OutOfBoundsException $e) {
-            // Expected
-        }
+        $this->assertDoesNotExposeProperty($subject, '_comment');
     }
 
     public function test_it_ignores_type_schema()
@@ -97,12 +93,7 @@ abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
         // NB: removing this from the array might be problematic if we want to persist a collection
         // of field schemas back to an array....
         $subject = $this->newSubject(['type' => 'text']);
-        try {
-            $foo = $subject->type;
-            $this->fail("Should throw on attempt to access a type property");
-        } catch (\OutOfBoundsException $e) {
-            // Expected
-        }
+        $this->assertDoesNotExposeProperty($subject, 'type');
     }
 
     /**
@@ -146,5 +137,24 @@ abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
     protected function getElementFactory()
     {
         return new FormElementFactory(FormConfig::withDefaults());
+    }
+
+    /**
+     * @param \Ingenerator\Form\Element\AbstractFormElement $element
+     * @param string                                        $property
+     */
+    protected function assertDoesNotExposeProperty(AbstractFormElement $element, $property)
+    {
+        $e = NULL;
+        try {
+            $foo = $element->$property;
+        } catch (\OutOfBoundsException $e) {
+            // Expected
+        }
+        $this->assertInstanceOf(
+            \OutOfBoundsException::class,
+            $e,
+            'Should throw on $element->'.$property
+        );
     }
 }

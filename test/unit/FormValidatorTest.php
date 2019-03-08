@@ -92,7 +92,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
     public function test_it_validates_supported_types_without_throwing($element)
     {
         $form = $this->givenFormWithElements($element);
-        $this->newSubject()->validate($form);
+        $this->assertTrue($this->newSubject()->validate($form));
     }
 
     public function test_it_builds_validation_with_constraints_for_required_text_field()
