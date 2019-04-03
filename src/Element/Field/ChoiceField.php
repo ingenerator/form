@@ -34,7 +34,7 @@ class ChoiceField extends AbstractFormField
     {
         $choices = [];
         foreach ($schema['choices'] as $choice) {
-            if (is_scalar($choice)) {
+            if (\is_scalar($choice)) {
                 $choices[] = [
                     'value'   => (string) $choice,
                     'caption' => (string) $choice
@@ -59,9 +59,9 @@ class ChoiceField extends AbstractFormField
     protected function isValidArrayChoiceDefinition($choice)
     {
         return (
-            is_array($choice)
-            AND array_key_exists('value', $choice)
-            AND array_key_exists('caption', $choice)
+            \is_array($choice)
+            AND \array_key_exists('value', $choice)
+            AND \array_key_exists('caption', $choice)
         );
     }
 
@@ -100,7 +100,7 @@ class ChoiceField extends AbstractFormField
         }
 
         if ($this->schema['add_empty_choice'] AND ! $has_empty) {
-            array_unshift(
+            \array_unshift(
                 $choices,
                 [
                     'value'    => '',
@@ -146,7 +146,7 @@ class ChoiceField extends AbstractFormField
 
     protected function listRequiredSchemaKeys()
     {
-        return array_merge(parent::listRequiredSchemaKeys(), ['choices']);
+        return \array_merge(parent::listRequiredSchemaKeys(), ['choices']);
     }
 
     /**

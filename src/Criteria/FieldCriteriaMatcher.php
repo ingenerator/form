@@ -45,8 +45,8 @@ class FieldCriteriaMatcher
      */
     protected function matchesCriterion($value, $criterion)
     {
-        $parts = explode(':', $criterion);
-        $rule  = array_shift($parts);
+        $parts = \explode(':', $criterion);
+        $rule  = \array_shift($parts);
 
         switch ($rule) {
             case 'empty':
@@ -56,7 +56,7 @@ class FieldCriteriaMatcher
                 return ! $this->isEmpty($value);
 
             case 'value':
-                return $value === implode(':', $parts);
+                return $value === \implode(':', $parts);
 
             default:
                 throw new \InvalidArgumentException("Unknown criteria type '$criterion'");
@@ -72,7 +72,7 @@ class FieldCriteriaMatcher
     {
         return (
             ($value === NULL)
-            OR (trim($value) === '')
+            OR (\trim($value) === '')
         );
     }
 }

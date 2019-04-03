@@ -99,7 +99,7 @@ class ChoiceFieldTest extends BaseFieldTest
                 // By default and with no empty choice in list, prepends auto-empty with custom text
                 ['choices' => ['One'], 'empty_value' => 'Go on, select'],
                 [
-                    array_merge($auto_empty, ['caption' => 'Go on, select']),
+                    \array_merge($auto_empty, ['caption' => 'Go on, select']),
                     ['value' => 'One', 'caption' => 'One', 'selected' => '', 'disabled' => ''],
                 ]
             ],
@@ -130,7 +130,7 @@ class ChoiceFieldTest extends BaseFieldTest
                 // By default and with no empty choice in list, prepends auto-empty with custom text
                 ['choices' => [$one_one], 'empty_value' => 'Do it'],
                 [
-                    array_merge($auto_empty, ['caption' => 'Do it']),
+                    \array_merge($auto_empty, ['caption' => 'Do it']),
                     ['value' => '1', 'caption' => 'One', 'selected' => '', 'disabled' => ''],
                 ]
             ],
@@ -273,7 +273,7 @@ class ChoiceFieldTest extends BaseFieldTest
             'choices' => ['One']
         ];
 
-        return new \Ingenerator\Form\Element\Field\ChoiceField(array_merge($default, $values));
+        return new \Ingenerator\Form\Element\Field\ChoiceField(\array_merge($default, $values));
     }
 
     /**

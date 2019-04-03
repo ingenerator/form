@@ -33,8 +33,8 @@ class TextareaField extends AbstractFormField
     {
         parent::assignValue($post);
         if ($this->rows === NULL) {
-            $text_lines           = count(explode("\n", $this->html_value));
-            $this->schema['rows'] = max(2, $text_lines + 1);
+            $text_lines           = \count(\explode("\n", $this->html_value));
+            $this->schema['rows'] = \max(2, $text_lines + 1);
         }
 
     }

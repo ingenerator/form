@@ -58,12 +58,12 @@ class GroupedChoiceField extends AbstractFormField
      */
     protected function throwUnlessArrayWithKeys($array, array $keys, $field_path)
     {
-        if ( ! is_array($array)) {
+        if ( ! \is_array($array)) {
             throw new \InvalidArgumentException('`'.$field_path.'` should be an array`');
         }
-        if ($missing_keys = array_diff($keys, array_keys($array))) {
+        if ($missing_keys = \array_diff($keys, \array_keys($array))) {
             throw new \InvalidArgumentException(
-                'Missing keys '.implode(', ', $missing_keys).' for '.$field_path
+                'Missing keys '.\implode(', ', $missing_keys).' for '.$field_path
             );
         }
     }
@@ -93,14 +93,14 @@ class GroupedChoiceField extends AbstractFormField
      */
     protected function isEmptySelected()
     {
-        return ! in_array($this->html_value, $this->valid_values, TRUE);
+        return ! \in_array($this->html_value, $this->valid_values, TRUE);
     }
 
     protected function getChoiceGroupsWithSelection()
     {
         $groups = [];
         foreach ($this->schema['choice_groups'] as $group) {
-            $group['choices'] = array_map(
+            $group['choices'] = \array_map(
                 function (array $choice) {
                     $choice['value']    = (string) $choice['value'];
                     $is_selected        = ($choice['value'] === $this->html_value);
@@ -151,7 +151,7 @@ class GroupedChoiceField extends AbstractFormField
 
     protected function listRequiredSchemaKeys()
     {
-        return array_merge(parent::listRequiredSchemaKeys(), ['choice_groups']);
+        return \array_merge(parent::listRequiredSchemaKeys(), ['choice_groups']);
     }
 
     protected function buildChoiceOption(array $schema_option)

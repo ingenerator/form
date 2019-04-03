@@ -106,7 +106,7 @@ class TextareaFieldTest extends BaseFieldTest
             'label' => 'What\'s the best foo?'
         ];
 
-        return new \Ingenerator\Form\Element\Field\TextareaField(array_merge($default, $values));
+        return new \Ingenerator\Form\Element\Field\TextareaField(\array_merge($default, $values));
     }
 
 }

@@ -44,8 +44,8 @@ class FormElementRenderer implements FormEditRenderer, FormDisplayRenderer
     public function getHighlightClasses($value, AbstractFormField $field)
     {
         $matcher = new FieldCriteriaMatcher;
-        $classes = array_keys(
-            array_filter(
+        $classes = \array_keys(
+            \array_filter(
                 [
                     'answer-highlighted'    => $matcher->matches($value, $field->highlight_if),
                     'answer-display-hidden' => $matcher->matches($value, $field->hide_display_if),
@@ -54,7 +54,7 @@ class FormElementRenderer implements FormEditRenderer, FormDisplayRenderer
             )
         );
 
-        return implode(' ', $classes);
+        return \implode(' ', $classes);
     }
 
     /**
@@ -80,7 +80,7 @@ class FormElementRenderer implements FormEditRenderer, FormDisplayRenderer
      */
     protected function findTemplateForElement(AbstractFormElement $element, $mode)
     {
-        if ($template_file = $this->config->getTemplateFile(get_class($element), $mode)) {
+        if ($template_file = $this->config->getTemplateFile(\get_class($element), $mode)) {
             return $template_file;
         }
 
@@ -110,11 +110,11 @@ class FormElementRenderer implements FormEditRenderer, FormDisplayRenderer
         $anon_capture  = $bound_capture->bindTo(NULL);
 
         // Render the template
-        ob_start();
+        \ob_start();
         try {
             $anon_capture($element, $this, $template_file);
         } finally {
-            $output = ob_get_clean();
+            $output = \ob_get_clean();
         }
 
         return $output;

@@ -102,7 +102,7 @@ class FormConfigTest extends \PHPUnit\Framework\TestCase
     public function test_with_default_constructor_provides_standard_template()
     {
         $subject = FormConfig::withDefaults();
-        $tpl_dir = realpath(__DIR__.'/../../field_templates/default');
+        $tpl_dir = \realpath(__DIR__.'/../../field_templates/default');
 
         $this->assertSame(
             $tpl_dir.'/edit/date.php',

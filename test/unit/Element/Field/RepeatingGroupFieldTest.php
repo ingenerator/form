@@ -221,7 +221,7 @@ class RepeatingGroupFieldTest extends BaseFieldTest
             ]
         ];
 
-        return new \Ingenerator\Form\Element\Field\RepeatingGroupField(array_merge($default, $values), $this->getElementFactory());
+        return new \Ingenerator\Form\Element\Field\RepeatingGroupField(\array_merge($default, $values), $this->getElementFactory());
     }
 
     /**
@@ -235,7 +235,7 @@ class RepeatingGroupFieldTest extends BaseFieldTest
             foreach ($group as $field) {
                 /** @var \Ingenerator\Form\Element\Field\AbstractFormField $field */
                 $actual[$index][] = [
-                    'class' => get_class($field),
+                    'class' => \get_class($field),
                     'name'  => $field->name,
                     'value' => $field->html_value
                 ];

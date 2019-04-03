@@ -9,7 +9,7 @@ require_once(__DIR__.'/../koharness_bootstrap.php');
 
 // Hacky workaround to show a simple text exception on fatal errors
 // Otherwise Kohana's shutdown function catches it and shows a huge HTML trace that's horrible to follow
-file_put_contents(
+\file_put_contents(
     APPPATH.'/views/text-error.php',
     '<?php echo "\n\nUnhandled error: ".\Kohana_Exception::text($e)."\n";'
 );
@@ -29,6 +29,6 @@ $mock_loader->addPsr4('test\\mock\\Ingenerator\\Form\\', [__DIR__.'/mock/']);
 $mock_loader->addPsr4('test\\unit\\Ingenerator\\Form\\', [__DIR__.'/unit/']);
 $mock_loader->register();
 
-if ( ! class_exists('\PHPUnit\Framework\Constraint\Constraint')) {
-    class_alias('PHPUnit_Framework_Constraint', '\PHPUnit\Framework\Constraint\Constraint');
+if ( ! \class_exists('\PHPUnit\Framework\Constraint\Constraint')) {
+    \class_alias('PHPUnit_Framework_Constraint', '\PHPUnit\Framework\Constraint\Constraint');
 }

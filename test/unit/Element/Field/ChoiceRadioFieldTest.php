@@ -14,7 +14,7 @@ class ChoiceRadioFieldTest extends ChoiceFieldTest
 
     public function provider_valid_options_and_defaults()
     {
-        return array_map(
+        return \array_map(
             function (array $o) {
                 switch ($o[0]) {
                     case 'add_empty_choice':
@@ -55,7 +55,7 @@ class ChoiceRadioFieldTest extends ChoiceFieldTest
                     'empty_value'      => 'Go on, select'
                 ],
                 [
-                    array_merge($auto_empty, ['caption' => 'Go on, select']),
+                    \array_merge($auto_empty, ['caption' => 'Go on, select']),
                     ['value' => 'One', 'caption' => 'One', 'selected' => '', 'disabled' => ''],
                 ]
             ],
@@ -93,7 +93,7 @@ class ChoiceRadioFieldTest extends ChoiceFieldTest
                 // When configured and with no empty choice in list, prepends auto-empty with custom text
                 ['add_empty_choice' => TRUE, 'choices' => [$one_one], 'empty_value' => 'Do it'],
                 [
-                    array_merge($auto_empty, ['caption' => 'Do it']),
+                    \array_merge($auto_empty, ['caption' => 'Do it']),
                     ['value' => '1', 'caption' => 'One', 'selected' => '', 'disabled' => ''],
                 ]
             ],
@@ -133,7 +133,7 @@ class ChoiceRadioFieldTest extends ChoiceFieldTest
             'choices' => ['One']
         ];
 
-        return new \Ingenerator\Form\Element\Field\ChoiceRadioField(array_merge($default, $values));
+        return new \Ingenerator\Form\Element\Field\ChoiceRadioField(\array_merge($default, $values));
     }
 
 

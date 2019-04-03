@@ -155,7 +155,7 @@ class FormTest extends BaseFormElementTest
             'elements' => [['type' => 'text', 'name' => 'foo', 'label' => 'foo']]
         ];
 
-        return new Form(array_merge($default, $values), $this->getElementFactory());
+        return new Form(\array_merge($default, $values), $this->getElementFactory());
     }
 
 }

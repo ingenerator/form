@@ -26,6 +26,10 @@
 
 * Allow render of entire form in display mode
 
+## v1.0.0 (2019-04-03)
+
+* Drop support for php5
+
 ## v0.2.1 (2018-03-20)
 
 * Fix reference to ShowgroupHelper in field templates

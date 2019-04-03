@@ -93,11 +93,11 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
 
     public function test_it_renders_custom_form_class_with_custom_template_if_mapped()
     {
-        $tmp_file     = tempnam(sys_get_temp_dir(), 'render-test-php');
+        $tmp_file     = \tempnam(\sys_get_temp_dir(), 'render-test-php');
         $this->config = FormConfig::withDefaults(
             ['template_map' => [RenderTestForm::class => ['edit' => $tmp_file]]]
         );
-        file_put_contents($tmp_file, 'I am the walrus');
+        \file_put_contents($tmp_file, 'I am the walrus');
         try {
             $form   = new RenderTestForm(
                 ['elements' => [['type' => 'text', 'name' => 'foo', 'label' => 'foo']]],
@@ -106,7 +106,7 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
             $output = $this->newSubject()->render($form);
 
         } finally {
-            unlink($tmp_file);
+            \unlink($tmp_file);
         }
 
         $this->assertSame('I am the walrus', $output);
@@ -182,7 +182,7 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
     ) {
         $this->matcher = new FieldCriteriaMatcher;
         $field         = new TextField(
-            array_merge(['label' => 'Name?', 'name' => 'name'], $criteria)
+            \array_merge(['label' => 'Name?', 'name' => 'name'], $criteria)
         );
         $this->assertEquals($expect, $this->newSubject()->getHighlightClasses($value, $field));
     }

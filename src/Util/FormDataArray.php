@@ -69,8 +69,8 @@ class FormDataArray
     {
         $data = $this->getRawValue($fieldname);
 
-        if (is_array($data)) {
-            return array_keys($data);
+        if (\is_array($data)) {
+            return \array_keys($data);
         } elseif ($data) {
             throw new \UnexpectedValueException(
                 "Cannot get group indices of non_array field '$fieldname"
@@ -90,22 +90,22 @@ class FormDataArray
 
         // Implementation borrowed from \Arr::set_path but with additional safety for duplicate values
         $array = &$this->data;
-        while (count($path) > 1) {
-            $key = array_shift($path);
-            if (ctype_digit($key)) {
+        while (\count($path) > 1) {
+            $key = \array_shift($path);
+            if (\ctype_digit($key)) {
                 $key = (int) $key;
             }
 
             if ( ! isset($array[$key])) {
                 $array[$key] = [];
-            } elseif ( ! is_array($array[$key])) {
+            } elseif ( ! \is_array($array[$key])) {
                 throw new \LogicException('Duplicate or overlapping fieldname : '.$fieldname);
             }
 
             $array = &$array[$key];
         }
 
-        $key = array_shift($path);
+        $key = \array_shift($path);
         if (isset($array[$key])) {
             throw new \LogicException('Duplicate or overlapping fieldname : '.$fieldname);
         }
@@ -127,12 +127,12 @@ class FormDataArray
      */
     protected function getFieldPath($fieldname)
     {
-        if ( ! preg_match('/^\w+(\[[_\w]+\])*$/', $fieldname, $matches)) {
+        if ( ! \preg_match('/^\w+(\[[_\w]+\])*$/', $fieldname, $matches)) {
             throw new \InvalidArgumentException("Invalid fieldname: '$fieldname'");
         }
 
-        $path = str_replace(']', '', $fieldname);
+        $path = \str_replace(']', '', $fieldname);
 
-        return explode('[', $path);
+        return \explode('[', $path);
     }
 }

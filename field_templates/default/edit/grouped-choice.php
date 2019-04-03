@@ -34,7 +34,7 @@ use Ingenerator\Form\Renderer\FormElementRenderer;
         <?php endforeach; ?>
     </select>
     <?php if ($field->errors): ?>
-        <p class="help-block"><?= implode(', ', $field->errors); ?></p>
+        <p class="help-block"><?= \implode(', ', $field->errors); ?></p>
     <?php elseif ($field->help_text): ?>
         <p class="help-block"><?= $field->help_text; ?></p>
     <?php endif; ?>
