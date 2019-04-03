@@ -51,7 +51,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
             $supported[] = $supported_type[0]['type'];
         }
         $unsupported = [];
-        foreach (array_diff($all_types, array_unique($supported)) as $type) {
+        foreach (\array_diff($all_types, \array_unique($supported)) as $type) {
             $unsupported[] = [['type' => $type]];
         }
 
@@ -69,7 +69,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
                 'constraints' => ['max' => 15],
             ],
         ];
-        $unsupported[] = [['type' => 'text', 'text_type' => uniqid('anything')]];
+        $unsupported[] = [['type' => 'text', 'text_type' => \uniqid('anything')]];
         $unsupported[] = [['type' => 'text', 'constraints' => ['pattern']]];
         $unsupported[] = [['type' => 'text', 'constraints' => ['required', 'pattern']]];
 
@@ -482,7 +482,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
      */
     protected function givenFormWithElements($element)
     {
-        return $this->givenFormWithElementArray(func_get_args());
+        return $this->givenFormWithElementArray(\func_get_args());
     }
 
     /**
@@ -551,9 +551,9 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $elements = array_map(
+        $elements = \array_map(
             function ($element) use ($default_props) {
-                return array_merge(\Arr::get($default_props, $element['type'], []), $element);
+                return \array_merge(\Arr::get($default_props, $element['type'], []), $element);
             },
             $elements
         );
@@ -585,7 +585,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
             /** @var \Ingenerator\Form\Element\Field\AbstractFormField $element */
             $errors[$element->name] = $element->errors;
         }
-        $errors = array_filter($errors);
+        $errors = \array_filter($errors);
 
         return $errors;
     }

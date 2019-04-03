@@ -29,7 +29,7 @@ class FormConfig
      */
     public function __construct(array $config)
     {
-        if ($missing = array_diff(['element_type_map', 'template_map'], array_keys($config))) {
+        if ($missing = \array_diff(['element_type_map', 'template_map'], \array_keys($config))) {
             throw InvalidFormConfigException::missingProperties($missing);
         }
         $this->config = $config;
@@ -44,7 +44,7 @@ class FormConfig
      */
     public static function withDefaults(array $override = NULL)
     {
-        $tpl_dir = realpath(__DIR__.'/../field_templates/default');
+        $tpl_dir = \realpath(__DIR__.'/../field_templates/default');
 
         $config = \Arr::merge(
             [
@@ -143,12 +143,12 @@ class FormConfig
      */
     public function listDefinedElementTypes()
     {
-        return array_keys(array_filter($this->config['element_type_map']));
+        return \array_keys(\array_filter($this->config['element_type_map']));
     }
 
     public function validate()
     {
-        $errors = array_merge(
+        $errors = \array_merge(
             $this->validateElementClassesExist(),
             $this->validateTemplatesExist()
         );
@@ -166,8 +166,8 @@ class FormConfig
     {
         $errors = [];
         foreach ($this->config['element_type_map'] as $field => $class) {
-            if ( ! class_exists($class)) {
-                $errors[] = sprintf('No class `%s` for field type `%s`', $class, $field);
+            if ( ! \class_exists($class)) {
+                $errors[] = \sprintf('No class `%s` for field type `%s`', $class, $field);
             }
         }
 
@@ -181,9 +181,9 @@ class FormConfig
     {
         $errors = [];
         foreach ($this->config['template_map'] as $field => $templates) {
-            foreach (array_filter($templates) as $mode => $template) {
-                if ( ! (is_file($template) AND is_readable($template))) {
-                    $errors[] = sprintf(
+            foreach (\array_filter($templates) as $mode => $template) {
+                if ( ! (\is_file($template) AND \is_readable($template))) {
+                    $errors[] = \sprintf(
                         'Template `%s` for `%s` in `%s` mode is not a readable file',
                         $template,
                         $field,

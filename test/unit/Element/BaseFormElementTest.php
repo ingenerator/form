@@ -112,7 +112,7 @@ abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
         $actual = [];
         foreach ($elements as $index => $field) {
             $actual[$index] = [
-                'class' => get_class($field),
+                'class' => \get_class($field),
                 'name'  => $field->name,
                 'value' => $field->html_value
             ];

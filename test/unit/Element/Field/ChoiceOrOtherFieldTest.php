@@ -190,7 +190,7 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
             'other_for_values' => ['Other']
         ];
 
-        return new \Ingenerator\Form\Element\Field\ChoiceOrOtherField(array_merge($default, $values), $this->getElementFactory());
+        return new \Ingenerator\Form\Element\Field\ChoiceOrOtherField(\array_merge($default, $values), $this->getElementFactory());
     }
 
 }

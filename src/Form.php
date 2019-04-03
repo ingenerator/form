@@ -75,7 +75,7 @@ class Form extends AbstractFormElement
 
     protected function listRequiredSchemaKeys()
     {
-        return array_merge(parent::listRequiredSchemaKeys(), ['elements']);
+        return \array_merge(parent::listRequiredSchemaKeys(), ['elements']);
     }
 
 }

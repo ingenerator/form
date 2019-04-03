@@ -145,7 +145,7 @@ class FormGroupElementTest extends BaseFormElementTest
             'fields' => [['type' => 'text', 'name' => 'foo', 'label' => 'foo']]
         ];
 
-        return new FormGroupElement(array_merge($default, $values), $this->getElementFactory());
+        return new FormGroupElement(\array_merge($default, $values), $this->getElementFactory());
     }
 
 }

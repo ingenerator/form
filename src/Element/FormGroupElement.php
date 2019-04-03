@@ -64,7 +64,7 @@ class FormGroupElement extends AbstractFormElement implements FormValueElement
 
     protected function listRequiredSchemaKeys()
     {
-        return array_merge(parent::listRequiredSchemaKeys(), ['fields', 'label']);
+        return \array_merge(parent::listRequiredSchemaKeys(), ['fields', 'label']);
     }
 
 }

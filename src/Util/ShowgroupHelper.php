@@ -35,9 +35,9 @@ class ShowgroupHelper
      */
     public function attrsForGroup(array $groups)
     {
-        $attributes = 'data-showgroups="'.implode(',', $groups).'"';
+        $attributes = 'data-showgroups="'.\implode(',', $groups).'"';
 
-        if ( ! in_array($this->current_value, $groups)) {
+        if ( ! \in_array($this->current_value, $groups)) {
             $attributes .= ' style="display:none;"';
         }
 

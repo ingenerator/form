@@ -37,7 +37,7 @@ class BodyTextFormElementTest extends BaseFormElementTest
             'content' => '<h2>Here is some html</h2>',
         ];
 
-        return new BodyTextFormElement(array_merge($default, $values));
+        return new BodyTextFormElement(\array_merge($default, $values));
     }
 
 

@@ -102,6 +102,6 @@ class RoughDateRangeFieldTest extends BaseFieldTest
             'name' => 'foofield',
         ];
 
-        return new RoughDateRangeField(array_merge($default, $values), $this->getElementFactory());
+        return new RoughDateRangeField(\array_merge($default, $values), $this->getElementFactory());
     }
 }

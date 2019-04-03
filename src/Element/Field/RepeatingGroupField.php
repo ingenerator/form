@@ -45,13 +45,13 @@ class RepeatingGroupField extends AbstractFormField
         $group_fields = [];
         foreach ($this->schema['fields'] as $field_schema) {
             if ($fieldname = \Arr::get($field_schema, 'name')) {
-                if ( ! preg_match('/^\[.+?\]$/', $fieldname)) {
+                if ( ! \preg_match('/^\[.+?\]$/', $fieldname)) {
                     throw new \InvalidArgumentException(
                         "Invalid fieldname `$fieldname` - did you mean `[$fieldname]`"
                     );
                 }
 
-                $field_schema['name'] = sprintf('%s[%s]%s', $this->name, $group_index, $fieldname);
+                $field_schema['name'] = \sprintf('%s[%s]%s', $this->name, $group_index, $fieldname);
             }
 
             $group_fields[] = $field_schema;
@@ -74,7 +74,7 @@ class RepeatingGroupField extends AbstractFormField
     {
         $values       = $post->getRawValue($this->name) ?: [];
         $this->groups = [];
-        foreach (array_keys($values) ?: [0] as $group_index) {
+        foreach (\array_keys($values) ?: [0] as $group_index) {
             $group = $this->buildGroupFields($group_index);
             foreach ($group as $field) {
                 if ($field instanceof FormValueElement) {
@@ -107,7 +107,7 @@ class RepeatingGroupField extends AbstractFormField
 
     protected function listRequiredSchemaKeys()
     {
-        return array_merge(parent::listRequiredSchemaKeys(), ['fields']);
+        return \array_merge(parent::listRequiredSchemaKeys(), ['fields']);
     }
 
 

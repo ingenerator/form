@@ -89,7 +89,7 @@ class TextFieldTest extends BaseFieldTest
             'label' => 'What\'s the best foo?'
         ];
 
-        return new TextField(array_merge($default, $values));
+        return new TextField(\array_merge($default, $values));
     }
 
 }

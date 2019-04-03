@@ -49,7 +49,7 @@ class FormElementFactory
     {
         if ( ! $type = \Arr::get($element_schema, 'type')) {
             throw new \InvalidArgumentException(
-                "No `type` defined in form element\n".json_encode($element_schema)
+                "No `type` defined in form element\n".\json_encode($element_schema)
             );
         }
 

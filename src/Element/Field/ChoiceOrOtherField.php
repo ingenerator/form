@@ -111,7 +111,7 @@ class ChoiceOrOtherField extends AbstractFormField
 
     protected function listRequiredSchemaKeys()
     {
-        return array_merge(
+        return \array_merge(
             parent::listRequiredSchemaKeys(),
             ['choices', 'other_for_values']
         );
@@ -124,7 +124,7 @@ class ChoiceOrOtherField extends AbstractFormField
      */
     protected function expectedDetailValueForChoice($choice_value)
     {
-        return in_array($choice_value, $this->other_for_values);
+        return \in_array($choice_value, $this->other_for_values);
     }
 
 }

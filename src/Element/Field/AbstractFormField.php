@@ -41,7 +41,7 @@ abstract class AbstractFormField extends AbstractFormElement implements FormValu
 
         parent::__construct($schema);
 
-        if ( ! is_array($this->schema['constraints'])) {
+        if ( ! \is_array($this->schema['constraints'])) {
             throw new \InvalidArgumentException('Field constraints must be an array');
         } else {
             $this->validateConstraintSchema($this->schema['constraints']);
@@ -51,7 +51,7 @@ abstract class AbstractFormField extends AbstractFormElement implements FormValu
     protected function validateConstraintSchema(array $constraints)
     {
         if ( ! empty($constraints)) {
-            throw new \InvalidArgumentException(get_class($this).' does not support `constraints`');
+            throw new \InvalidArgumentException(\get_class($this).' does not support `constraints`');
         }
     }
 
@@ -88,7 +88,7 @@ abstract class AbstractFormField extends AbstractFormElement implements FormValu
     protected function getDefaultSchema()
     {
         return [
-            'id'              => uniqid('field'),
+            'id'              => \uniqid('field'),
             'label'           => NULL,
             'display_label'   => NULL,
             'hide_display_if' => [],

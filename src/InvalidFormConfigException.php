@@ -18,7 +18,7 @@ class InvalidFormConfigException extends \InvalidArgumentException
     public static function missingProperties(array $missing)
     {
         return new static(
-            'FormConfig is missing required options - '.json_encode($missing)
+            'FormConfig is missing required options - '.\json_encode($missing)
         );
     }
 
@@ -30,7 +30,7 @@ class InvalidFormConfigException extends \InvalidArgumentException
     public static function withErrors(array $errors)
     {
         return new static(
-            'FormConfig is not valid: '."\n -".implode("\n -", $errors)
+            'FormConfig is not valid: '."\n -".\implode("\n -", $errors)
         );
     }
 

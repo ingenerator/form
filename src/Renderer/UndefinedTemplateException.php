@@ -13,6 +13,6 @@ class UndefinedTemplateException extends \OutOfBoundsException
 {
     public static function forElement(AbstractFormElement $element, $mode)
     {
-        return new static('No mapped `'.$mode.'` template for form element '.get_class($element));
+        return new static('No mapped `'.$mode.'` template for form element '.\get_class($element));
     }
 }

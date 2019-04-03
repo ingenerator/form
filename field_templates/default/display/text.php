@@ -10,7 +10,7 @@ use Ingenerator\Form\Element\Field\ChoiceField;
 use Ingenerator\Form\Element\Field\DateField;
 use Ingenerator\Form\Renderer\FormElementRenderer;
 
-$answer_paragraphs = preg_split('/\n\s*/', $field->display_value ?: 'Left blank');
+$answer_paragraphs = \preg_split('/\n\s*/', $field->display_value ?: 'Left blank');
 $classes           = $form_renderer->getHighlightClasses($field->html_value, $field);
 ?>
 <div class="form-answer-group <?= $classes; ?>">

@@ -270,7 +270,7 @@ class GroupedChoiceFieldTest extends BaseFieldTest
             ]
         ];
 
-        return new GroupedChoiceField(array_merge($default, $values));
+        return new GroupedChoiceField(\array_merge($default, $values));
     }
 
     /**

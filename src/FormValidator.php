@@ -85,7 +85,7 @@ class FormValidator
     ) {
         foreach ($fields as $index => $value) {
             $field_path = ($path_prefix ? $path_prefix.'['.$index.']' : $index);
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 $this->flattenFormValuesArray($value, $field_path, $flat_values);
             } else {
                 $flat_values[$field_path] = $value;
@@ -145,11 +145,11 @@ class FormValidator
     {
         $constraints = [];
         foreach ($field->constraints as $key => $value) {
-            if (is_numeric($key)) {
+            if (\is_numeric($key)) {
                 $key = $value;
             }
 
-            if ( ! in_array($key, $allowed_constraints)) {
+            if ( ! \in_array($key, $allowed_constraints)) {
                 throw UnsupportedValidationException::badConstraint($field, $key);
             }
             $constraints[$key] = $value;

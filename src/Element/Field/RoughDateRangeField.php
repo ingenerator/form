@@ -52,7 +52,7 @@ class RoughDateRangeField extends AbstractFormField
 
     protected function getDisplayValue()
     {
-        $values = array_filter(
+        $values = \array_filter(
             [
                 $this->from_field->display_value,
                 $this->to_field->display_value
@@ -60,7 +60,7 @@ class RoughDateRangeField extends AbstractFormField
         );
         
         if ($values) {
-            return implode(' - ', $values);
+            return \implode(' - ', $values);
         } else {
             return $this->empty_value;
         }

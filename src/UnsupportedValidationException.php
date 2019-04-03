@@ -16,7 +16,7 @@ class UnsupportedValidationException extends \InvalidArgumentException
     public static function badClass(AbstractFormElement $element)
     {
         return new static(
-            'Cannot automatically validate element of type '.get_class($element)
+            'Cannot automatically validate element of type '.\get_class($element)
         );
     }
 
@@ -31,7 +31,7 @@ class UnsupportedValidationException extends \InvalidArgumentException
     public static function badConstraint(AbstractFormElement $field, $constraint)
     {
         return new static(
-            'Cannot automatically validate `'.$constraint.'` constraint for '.get_class($field)
+            'Cannot automatically validate `'.$constraint.'` constraint for '.\get_class($field)
         );
     }
 
