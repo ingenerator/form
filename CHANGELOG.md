@@ -1,5 +1,13 @@
 ### Unreleased
 
+## v1.1.0 (2020-05-14)
+
+* Support kohana-extras 1.0 or 2.0 (the BC breaks don't affect us)
+
+## v1.0.0 (2019-04-03)
+
+* Drop support for php5
+
 ## v0.2.7 (2019-03-08)
 
 * Fix all risky tests by adding sensible assertions
@@ -25,10 +33,6 @@
 ## v0.2.2 (2018-03-20)
 
 * Allow render of entire form in display mode
-
-## v1.0.0 (2019-04-03)
-
-* Drop support for php5
 
 ## v0.2.1 (2018-03-20)
 
