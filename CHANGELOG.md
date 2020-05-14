@@ -1,5 +1,7 @@
 ### Unreleased
 
+## v1.1.0 (2020-05-14)
+
 * Support kohana-extras 1.0 or 2.0 (the BC breaks don't affect us)
 
 ## v1.0.0 (2019-04-03)
