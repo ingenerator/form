@@ -8,6 +8,7 @@ namespace test\unit\Teamdetails\Form\Criteria;
 
 
 use Ingenerator\Form\Criteria\FieldCriteriaMatcher;
+use InvalidArgumentException;
 
 class FieldCriteriaMatcherTest extends \PHPUnit\Framework\TestCase {
 
@@ -67,11 +68,9 @@ class FieldCriteriaMatcherTest extends \PHPUnit\Framework\TestCase {
         $this->assertFalse($subject->matches('No', ['value:Yes', 'empty']), 'Should not match "No"');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_it_throws_with_unknown_criteria_type()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject()->matches('stuff', ['random']);
     }
 

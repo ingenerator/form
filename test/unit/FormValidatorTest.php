@@ -11,9 +11,9 @@ use Ingenerator\Form\Form;
 use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\FormValidator;
+use Ingenerator\Form\UnsupportedValidationException;
 use Ingenerator\KohanaExtras\Validation\TestConstraint\ValidationRulesMatch;
 use Ingenerator\PHPUtils\Object\ObjectPropertyRipper;
-use test\unit\BaseTestCase;
 
 class FormValidatorTest extends \PHPUnit\Framework\TestCase
 {
@@ -78,11 +78,11 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider provider_unsupported_field_types
-     * @expectedException \Ingenerator\Form\UnsupportedValidationException
      */
     public function test_it_throws_if_unsupported_field_types_or_constraints($element_schema)
     {
         $form = $this->givenFormWithElements($element_schema);
+        $this->expectException(UnsupportedValidationException::class);
         $this->newSubject()->validate($form);
     }
 

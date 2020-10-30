@@ -8,6 +8,9 @@ namespace test\unit\Ingenerator\Form\Util;
 
 
 use Ingenerator\Form\Util\FormDataArray;
+use InvalidArgumentException;
+use LogicException;
+use UnexpectedValueException;
 
 class FormDataArrayTest extends \PHPUnit\Framework\TestCase
 {
@@ -67,19 +70,19 @@ class FormDataArrayTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider provider_invalid_fieldnames
-     * @expectedException \InvalidArgumentException
      */
     public function test_it_throws_from_raw_value_with_invalid_fieldname($name)
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject([])->getRawValue($name);
     }
 
     /**
      * @dataProvider provider_invalid_fieldnames
-     * @expectedException \InvalidArgumentException
      */
     public function test_it_throws_when_setting_invalid_fieldname($name)
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject([])->setFieldValue($name, NULL);
     }
 
@@ -87,13 +90,12 @@ class FormDataArrayTest extends \PHPUnit\Framework\TestCase
      * @testWith ["foo[bar]"]
      *           ["foo[bar][bex]"]
      *           ["foo[bar][bex][data]"]
-     *
-     * @expectedException \LogicException
      */
     public function test_it_throws_if_attempting_to_reassign_existing_key($bad_path)
     {
         $subject = $this->newSubject([]);
         $subject->setFieldValue('foo[bar][bex]', 'anything');
+        $this->expectException(LogicException::class);
         $subject->setFieldValue($bad_path, 'oh dear');
     }
 
@@ -184,11 +186,9 @@ class FormDataArrayTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['zero', 'one'], $subject->getGroupIndices('foo'));
     }
 
-    /**
-     * @expectedException \UnexpectedValueException
-     */
     public function test_it_throws_for_group_indices_of_non_array_field()
     {
+        $this->expectException(UnexpectedValueException::class);
         $this->newSubject(['foo' => 'bar'])->getGroupIndices('foo');
     }
 

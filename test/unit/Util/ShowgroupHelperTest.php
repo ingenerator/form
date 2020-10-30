@@ -37,7 +37,7 @@ class ShowgroupHelperTest extends \PHPUnit\Framework\TestCase {
     public function test_it_renders_no_style_attribute_when_element_should_display_for_current_value()
     {
         $this->value = 'selected';
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             'style',
             $this->newSubject()->attrsForGroup(['selected'])
         );
@@ -46,7 +46,7 @@ class ShowgroupHelperTest extends \PHPUnit\Framework\TestCase {
     public function test_it_renders_style_display_none_when_element_should_not_display_for_current_value()
     {
         $this->value = 'not-selected';
-        $this->assertContains(
+        $this->assertStringContainsString(
             ' style="display:none;"',
             $this->newSubject()->attrsForGroup(['selected'])
         );

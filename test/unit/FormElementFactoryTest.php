@@ -13,6 +13,8 @@ use Ingenerator\Form\Element\Field\TextareaField;
 use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
+use Ingenerator\Form\UndefinedFieldTypeException;
+use InvalidArgumentException;
 
 class FormElementFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -26,20 +28,16 @@ class FormElementFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(FormElementFactory::class, $this->newSubject());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_it_throws_if_field_type_is_empty()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject()->make([[]]);
     }
 
-    /**
-     * @expectedException Ingenerator\Form\UndefinedFieldTypeException
-     */
     public function test_it_throws_if_field_type_is_not_mapped()
     {
         $this->config = FormConfig::withDefaults(['element_type_map' => ['text' => NULL]]);
+        $this->expectException(UndefinedFieldTypeException::class);
         $this->newSubject()->make([['type' => 'text']]);
     }
 
@@ -88,7 +86,7 @@ class FormElementFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertFieldInstanceNamed(RoughDateRangeField::class, 'dates', $elements[0]);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->config = FormConfig::withDefaults();

@@ -9,13 +9,13 @@ namespace test\unit\Ingenerator\Form\Renderer;
 
 use Ingenerator\Form\Criteria\FieldCriteriaMatcher;
 use Ingenerator\Form\Element\BodyTextFormElement;
-use Ingenerator\Form\Element\Field\ChoiceField;
 use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\Element\FormGroupElement;
 use Ingenerator\Form\Form;
 use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\Renderer\FormElementRenderer;
+use Ingenerator\Form\Renderer\UndefinedTemplateException;
 
 class FormElementRendererTest extends \PHPUnit\Framework\TestCase
 {
@@ -51,15 +51,14 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Ingenerator\Form\Renderer\UndefinedTemplateException
-     */
     public function test_it_throws_if_no_template_defined_for_the_element_class_being_rendered()
     {
         $this->config = FormConfig::withDefaults(
             ['template_map' => [BodyTextFormElement::class => ['edit' => NULL]]]
         );
-        $this->newSubject()->render(new BodyTextFormElement(['content' => 'howdy']));
+        $subject      = $this->newSubject();
+        $this->expectException(UndefinedTemplateException::class);
+        $subject->render(new BodyTextFormElement(['content' => 'howdy']));
     }
 
     public function test_it_returns_output_of_simple_template_for_single_field()
@@ -68,7 +67,7 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
             new TextField(['label' => 'What is your name?', 'name' => 'name'])
         );
 
-        $this->assertContains('What is your name?', $output);
+        $this->assertStringContainsString('What is your name?', $output);
         $this->assertFalse($this->hasOutput(), 'Should not have output anything directly');
     }
 
@@ -86,9 +85,9 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
             $this->getElementFactory()
         );
         $output = $this->newSubject()->render($group);
-        $this->assertContains('General', $output);
-        $this->assertContains('name="foo"', $output);
-        $this->assertContains('Barry', $output);
+        $this->assertStringContainsString('General', $output);
+        $this->assertStringContainsString('name="foo"', $output);
+        $this->assertStringContainsString('Barry', $output);
     }
 
     public function test_it_renders_custom_form_class_with_custom_template_if_mapped()
@@ -127,8 +126,8 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
         );
         $output = $this->newSubject()->render($form);
 
-        $this->assertContains('name="foo"', $output);
-        $this->assertContains('Barry', $output);
+        $this->assertStringContainsString('name="foo"', $output);
+        $this->assertStringContainsString('Barry', $output);
     }
 
     /**
@@ -142,7 +141,7 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
             new TextField(['label' => 'What is your name?', 'name' => 'name'])
         );
 
-        $this->assertContains($expect_output, $output);
+        $this->assertStringContainsString($expect_output, $output);
     }
 
     public function provider_highlighter_classes()
@@ -187,7 +186,7 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expect, $this->newSubject()->getHighlightClasses($value, $field));
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->config = FormConfig::withDefaults();

@@ -9,6 +9,7 @@ namespace test\unit\Ingenerator\Form\Element\Field;
 
 use Ingenerator\Form\Element\Field\GroupedChoiceField;
 use Ingenerator\Form\Util\FormDataArray;
+use InvalidArgumentException;
 
 class GroupedChoiceFieldTest extends BaseFieldTest
 {
@@ -87,10 +88,10 @@ class GroupedChoiceFieldTest extends BaseFieldTest
 
     /**
      * @dataProvider provider_invalid_choice_groups
-     * @expectedException \InvalidArgumentException
      */
     public function test_it_throws_if_choice_groups_not_valid($choice_groups)
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject(['choice_groups' => $choice_groups]);
     }
 

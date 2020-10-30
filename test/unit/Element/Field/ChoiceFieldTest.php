@@ -8,6 +8,7 @@ namespace test\unit\Ingenerator\Form\Element\Field;
 
 
 use Ingenerator\Form\Util\FormDataArray;
+use InvalidArgumentException;
 
 class ChoiceFieldTest extends BaseFieldTest
 {
@@ -50,10 +51,10 @@ class ChoiceFieldTest extends BaseFieldTest
 
     /**
      * @dataProvider provider_invalid_choices
-     * @expectedException \InvalidArgumentException
      */
     public function test_it_throws_if_choices_not_simple_string_or_value_caption_array($choices)
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject(['choices' => $choices]);
     }
 

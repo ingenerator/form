@@ -7,10 +7,14 @@
 namespace test\unit\Ingenerator\Form\Element;
 
 
+use DomainException;
 use Ingenerator\Form\Element\AbstractFormElement;
 use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\Util\FormDataArray;
+use InvalidArgumentException;
+use LogicException;
+use OutOfBoundsException;
 
 abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
 {
@@ -27,36 +31,29 @@ abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider provider_required_options
-     * @expectedException \DomainException
      */
     public function test_it_cannot_be_constructed_without_required_options($option)
     {
+        $this->expectException(DomainException::class);
         $this->newSubject([$option => '']);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_it_cannot_be_constructed_with_invalid_options()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject(['some-old-nonsense' => 'junk']);
     }
 
-    /**
-     * @expectedException \OutOfBoundsException
-     */
     public function test_it_throws_on_access_to_unknown_property()
     {
+        $this->expectException(OutOfBoundsException::class);
         $this->newSubject()->some_old_nonsense;
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function test_it_throws_on_attempt_to_assign_any_property()
     {
         $field = 'name';
-
+        $this->expectException(LogicException::class);
         $this->newSubject()->$field = 'cannot-do-this';
     }
 
@@ -148,11 +145,11 @@ abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
         $e = NULL;
         try {
             $foo = $element->$property;
-        } catch (\OutOfBoundsException $e) {
+        } catch (OutOfBoundsException $e) {
             // Expected
         }
         $this->assertInstanceOf(
-            \OutOfBoundsException::class,
+            OutOfBoundsException::class,
             $e,
             'Should throw on $element->'.$property
         );
