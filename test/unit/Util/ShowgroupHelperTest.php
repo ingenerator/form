@@ -20,7 +20,7 @@ class ShowgroupHelperTest extends \PHPUnit\Framework\TestCase {
 
     public function test_it_returns_data_showgroups_tags_for_single_value()
     {
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/(^| )data-showgroups="value"( |$)/',
             $this->newSubject()->attrsForGroup(['value'])
         );
@@ -28,7 +28,7 @@ class ShowgroupHelperTest extends \PHPUnit\Framework\TestCase {
 
     public function test_it_returns_data_showgroups_attribute_for_multiple_values()
     {
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/(^| )data-showgroups="one,two"( |$)/',
             $this->newSubject()->attrsForGroup(['one', 'two'])
         );
