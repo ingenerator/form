@@ -10,6 +10,7 @@ namespace test\unit\Ingenerator\Form\Element\Field;
 use Ingenerator\Form\Element\Field\RepeatingGroupField;
 use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\Util\FormDataArray;
+use InvalidArgumentException;
 
 class RepeatingGroupFieldTest extends BaseFieldTest
 {
@@ -26,19 +27,15 @@ class RepeatingGroupFieldTest extends BaseFieldTest
         return $required;
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_it_throws_if_any_html5_constraints_specified()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject(['constraints' => ['required']]);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_it_throws_if_contained_fieldname_not_wrapped_in_brackets()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject(['name' => 'jobs', 'fields' => [['type' => 'text', 'name' => 'wrong']]]);
     }
 

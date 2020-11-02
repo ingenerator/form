@@ -9,6 +9,7 @@ namespace test\unit\Ingenerator\Form\Element\Field;
 
 use Ingenerator\Form\Element\Field\AbstractFormField;
 use Ingenerator\Form\Util\FormDataArray;
+use InvalidArgumentException;
 use test\unit\Ingenerator\Form\Element\BaseFormElementTest;
 
 abstract class BaseFieldTest extends BaseFormElementTest
@@ -25,7 +26,7 @@ abstract class BaseFieldTest extends BaseFormElementTest
     public function test_it_has_unique_id_by_default()
     {
         $field = $this->newSubject();
-        $this->assertInternalType('string', $field->id);
+        $this->assertIsString($field->id);
         $this->assertSame($field->id, $field->id);
         $this->assertNotEquals($field->id, $this->newSubject()->id);
     }
@@ -51,11 +52,9 @@ abstract class BaseFieldTest extends BaseFormElementTest
         $this->assertSame([], $this->newSubject()->constraints);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_it_throws_if_constraints_not_specified_as_array()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject(['constraints' => 'required']);
     }
 
@@ -74,11 +73,10 @@ abstract class BaseFieldTest extends BaseFormElementTest
     /**
      * @testWith ["value"]
      *           ["errors"]
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function test_it_throws_on_attempt_to_init_value_or_error_as_schema_property($field)
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject([$field => 'anything']);
     }
 

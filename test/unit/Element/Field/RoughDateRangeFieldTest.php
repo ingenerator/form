@@ -10,6 +10,7 @@ namespace test\unit\Ingenerator\Form\Element\Field;
 use Ingenerator\Form\Element\Field\RoughDateRangeField;
 use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\Util\FormDataArray;
+use InvalidArgumentException;
 
 class RoughDateRangeFieldTest extends BaseFieldTest
 {
@@ -26,11 +27,9 @@ class RoughDateRangeFieldTest extends BaseFieldTest
         ];
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_it_throws_if_any_html5_constraints_specified()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->newSubject(['constraints' => ['required']]);
     }
 

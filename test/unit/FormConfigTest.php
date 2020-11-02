@@ -12,6 +12,7 @@ use Ingenerator\Form\Element\Field\RoughDateRangeField;
 use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\Element\FormGroupElement;
 use Ingenerator\Form\FormConfig;
+use Ingenerator\Form\InvalidFormConfigException;
 
 class FormConfigTest extends \PHPUnit\Framework\TestCase
 {
@@ -25,21 +26,17 @@ class FormConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(FormConfig::class, $this->newSubject());
     }
 
-    /**
-     * @expectedException \Ingenerator\Form\InvalidFormConfigException
-     */
     public function test_it_throws_without_element_type_map()
     {
         unset($this->config['element_type_map']);
+        $this->expectException(InvalidFormConfigException::class);
         $this->newSubject();
     }
 
-    /**
-     * @expectedException \Ingenerator\Form\InvalidFormConfigException
-     */
     public function test_it_throws_without_template_map()
     {
         unset($this->config['template_map']);
+        $this->expectException(InvalidFormConfigException::class);
         $this->newSubject();
     }
 
@@ -189,12 +186,11 @@ class FormConfigTest extends \PHPUnit\Framework\TestCase
     /**
      * @testWith [{"element_type_map": {"junk": "some\\junk\\field"}}]
      *           [{"template_map": {"\\junk\\field": {"edit": "/no/file/here.php"}}}]
-     *
-     * @expectedException \Ingenerator\Form\InvalidFormConfigException
      */
     public function test_validate_throws_when_missing_files_or_classes($invalid_config)
     {
         $subject = FormConfig::withDefaults($invalid_config);
+        $this->expectException(InvalidFormConfigException::class);
         $subject->validate();
     }
 
