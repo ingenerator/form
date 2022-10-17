@@ -12,15 +12,15 @@
     }
   ],
   "require": {
-    "php": "^7.4 || ~8.0.0",
+    "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
     "ingenerator/kohana-core": "^4.7",
     "ingenerator/php-utils": "^1.6",
     "ingenerator/kohana-extras": "^2.0"
   },
   "require-dev": {
     "kohana/koharness": "dev-master",
-    "phpunit/phpunit": "^9.4",
-    "johnkary/phpunit-speedtrap": "^3.2"
+    "phpunit/phpunit": "^9.5.5",
+    "johnkary/phpunit-speedtrap": "^3.3"
   },
   "suggest": {
     "ingenerator/showgroup": "javascript support to show/hide form sections based on values"
@@ -37,7 +37,10 @@
     }
   },
   "config": {
-    "preferred-install": "dist"
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "composer/installers": true
+    }
   },
   "extra": {
     "installer-paths": {
