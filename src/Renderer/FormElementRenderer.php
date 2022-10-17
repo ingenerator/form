@@ -26,6 +26,8 @@ class FormElementRenderer implements FormEditRenderer, FormDisplayRenderer
      */
     protected $template_map;
 
+    private FormConfig $config;
+
     /**
      * @param \Ingenerator\Form\FormConfig $config
      */

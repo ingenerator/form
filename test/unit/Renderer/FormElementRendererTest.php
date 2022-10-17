@@ -30,6 +30,8 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
      */
     protected $render_mode = 'edit';
 
+    private FieldCriteriaMatcher $matcher;
+
     public function test_it_is_initialisable()
     {
         $this->assertInstanceOf(FormElementRenderer::class, $this->newSubject());

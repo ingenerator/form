@@ -15,6 +15,7 @@ namespace Ingenerator\Form\Util;
  */
 class FormDataArray
 {
+    private array $data;
 
     /**
      * @param array $data
