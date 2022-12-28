@@ -14,6 +14,7 @@ class ChoiceRadioFieldTest extends ChoiceFieldTest
     {
         $defaults                     = parent::provider_valid_options_and_defaults();
         $defaults['add_empty_choice'] = ['add_empty_choice', FALSE, TRUE];
+        $defaults['bordered_choices'] = ['bordered_choices', FALSE, TRUE];
 
         return $defaults;
     }

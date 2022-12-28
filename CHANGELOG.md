@@ -1,5 +1,9 @@
 ### Unreleased
 
+* Add a `bordered_choices` option to `choice-radio` fields to style more like a list-group with borders around
+  each choice - useful in cases where the description / content of a choice-radio is longer than one line and
+  you want to provide more visual clarity around the meaning of each choice.
+
 * Automatically highlight selected `choice-radio` block in edit mode
   Adds a simple pure-javascript handler to automatically toggle `choice--selected` classes on a radio input on modern
   browsers. Also introduces a simple LESS file that can be combined into a bootstrap3 build to style choice--selected

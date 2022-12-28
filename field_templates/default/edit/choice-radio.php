@@ -1,18 +1,25 @@
 <?php
 /**
- * Renders a choice field as a select
- * @var \Ingenerator\Form\Element\Field\ChoiceField $field
+ * Renders a choice field as a list of radio buttons
+ * @var \Ingenerator\Form\Element\Field\ChoiceRadioField $field
  * @var FormElementRenderer                         $form_renderer
  */
 
 use Ingenerator\Form\Renderer\FormElementRenderer;
+
+$classes = array_filter(
+    [
+        $field->length ? "form-control-{$field->length}-text" : "",
+        $field->bordered_choices ? 'choice-list--bordered' : '',
+    ]
+);
 
 ?>
 <div class="form-group <?= $field->errors ? 'has-error' : ''; ?>"
     <?= \HTML::attributes($field->container_data); ?>
 >
     <label class="control-label"><?= $field->label; ?></label>
-    <div class="<?= $field->length ? "form-control-{$field->length}-text" : ""; ?>"
+    <div class="<?=implode(' ', $classes); ?>"
          data-choice-radio-name="<?=$field->name;?>"
     >
         <?php foreach ($field->choices as $choice): ?>
