@@ -7,25 +7,15 @@
 namespace test\unit\Ingenerator\Form\Element\Field;
 
 
-use Ingenerator\Form\Util\FormDataArray;
-
 class ChoiceRadioFieldTest extends ChoiceFieldTest
 {
 
     public function provider_valid_options_and_defaults()
     {
-        return \array_map(
-            function (array $o) {
-                switch ($o[0]) {
-                    case 'add_empty_choice':
-                        return ['add_empty_choice', FALSE, TRUE];
+        $defaults                     = parent::provider_valid_options_and_defaults();
+        $defaults['add_empty_choice'] = ['add_empty_choice', FALSE, TRUE];
 
-                    default:
-                        return $o;
-                }
-            },
-            parent::provider_valid_options_and_defaults()
-        );
+        return $defaults;
     }
 
     public function provider_auto_empty_choice()

@@ -20,8 +20,8 @@ class TextFieldTest extends BaseFieldTest
     public function provider_valid_options_and_defaults()
     {
         $options   = parent::provider_valid_options_and_defaults();
-        $options[] = ['text_type', 'text', 'email'];
-        $options[] = ['length', NULL, 'short'];
+        $options['text_type'] = ['text_type', 'text', 'email'];
+        $options['length'] = ['length', NULL, 'short'];
 
         return $options;
     }

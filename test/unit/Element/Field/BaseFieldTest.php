@@ -39,11 +39,11 @@ abstract class BaseFieldTest extends BaseFormElementTest
     public function provider_valid_options_and_defaults()
     {
         return [
-            ['container_data', [], ['data-showgroup', 'data-show' => 'stuff']],
-            ['empty_value', NULL, 'your name here'],
-            ['help_text', NULL, 'some <em>help</em> text'],
-            ['highlight_if', [], ['empty']],
-            ['hide_display_if', [], ['value:anything']],
+            'container_data'  => ['container_data', [], ['data-showgroup', 'data-show' => 'stuff']],
+            'empty_value'     => ['empty_value', NULL, 'your name here'],
+            'help_text'       => ['help_text', NULL, 'some <em>help</em> text'],
+            'highlight_if'    => ['highlight_if', [], ['empty']],
+            'hide_display_if' => ['hide_display_if', [], ['value:anything']],
         ];
     }
 
