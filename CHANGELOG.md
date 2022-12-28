@@ -1,5 +1,9 @@
 ### Unreleased
 
+* Render `choice-radio` field values without HTML escaping in display mode.
+  These captions come from the schema, not user input, and they are not HTML-escaped in the edit mode template
+  so should also be displayed 'raw' in display mode (choice-radio can be used for choices that need explanatory
+  text or other HTML content in their selections).
 * Add a display template mapping for `date` fields
 
 ## v1.3.0 (2022-11-17)
