@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Add a display template mapping for `date` fields
+
 ## v1.3.0 (2022-11-17)
 
 * Support PHP 8.1 and PHP 8.2

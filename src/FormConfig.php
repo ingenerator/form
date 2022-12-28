@@ -79,7 +79,8 @@ class FormConfig
                         'display' => $tpl_dir.'/display/choice-or-other.php',
                     ],
                     DateField::class           => [
-                        'edit' => $tpl_dir.'/edit/date.php',
+                        'edit'    => $tpl_dir.'/edit/date.php',
+                        'display' => $tpl_dir.'/display/text.php',
                     ],
                     Form::class                => [
                         'edit'    => $tpl_dir.'/edit/form.php',
