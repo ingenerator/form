@@ -1,9 +1,15 @@
 ### Unreleased
 
+* Automatically highlight selected `choice-radio` block in edit mode
+  Adds a simple pure-javascript handler to automatically toggle `choice--selected` classes on a radio input on modern
+  browsers. Also introduces a simple LESS file that can be combined into a bootstrap3 build to style choice--selected
+  with a `success` background.
+
 * Render `choice-radio` field values without HTML escaping in display mode.
   These captions come from the schema, not user input, and they are not HTML-escaped in the edit mode template
   so should also be displayed 'raw' in display mode (choice-radio can be used for choices that need explanatory
   text or other HTML content in their selections).
+
 * Add a display template mapping for `date` fields
 
 ## v1.3.0 (2022-11-17)
