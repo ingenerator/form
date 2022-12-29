@@ -1,0 +1,41 @@
+/**
+ * Provides custom CSS for specific field types, designed to layer on top of bootstrap 3's general form styling
+ */
+
+&.choice--selected {
+  // Highlight selected choice blocks for
+  background: @state-success-bg;
+  // Apply a bit of left/right space so the background doesn't sit right on the checkbox border
+  margin-left: -5px;
+  margin-right: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.choice-list--bordered {
+  // A list of choices (.radio or .check) that should be rendered like a .list-group with borders around each item
+  // useful for choices that have long / multiline captions.
+  > .radio,
+  > .checkbox {
+    > label {
+      // Make the label the full size of the list item so that the whole bordered area is clickable
+      display: block;
+    }
+
+    // Place the border on the list items and negative margin up for better styling
+    border: 1px solid @list-group-border;
+    margin: 0 0 -1px;
+    // Match .form-control
+    padding: @padding-base-vertical @padding-base-horizontal;
+
+    // Round the first and last items
+    &:first-child {
+      .border-top-radius(@list-group-border-radius);
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+      .border-bottom-radius(@list-group-border-radius);
+    }
+  }
+}

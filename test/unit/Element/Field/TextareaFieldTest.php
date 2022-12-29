@@ -27,7 +27,7 @@ class TextareaFieldTest extends BaseFieldTest
     public function provider_valid_options_and_defaults()
     {
         $defaults   = parent::provider_valid_options_and_defaults();
-        $defaults[] = ['rows', NULL, 10];
+        $defaults['rows'] = ['rows', NULL, 10];
 
         return $defaults;
     }

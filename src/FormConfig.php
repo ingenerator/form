@@ -72,14 +72,15 @@ class FormConfig
                     ],
                     ChoiceRadioField::class    => [
                         'edit'    => $tpl_dir.'/edit/choice-radio.php',
-                        'display' => $tpl_dir.'/display/text.php'
+                        'display' => $tpl_dir.'/display/choice-radio.php'
                     ],
                     ChoiceOrOtherField::class  => [
                         'edit'    => $tpl_dir.'/edit/choice-or-other.php',
                         'display' => $tpl_dir.'/display/choice-or-other.php',
                     ],
                     DateField::class           => [
-                        'edit' => $tpl_dir.'/edit/date.php',
+                        'edit'    => $tpl_dir.'/edit/date.php',
+                        'display' => $tpl_dir.'/display/text.php',
                     ],
                     Form::class                => [
                         'edit'    => $tpl_dir.'/edit/form.php',

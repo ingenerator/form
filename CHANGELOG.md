@@ -1,5 +1,26 @@
 ### Unreleased
 
+## v1.4.0 (2022-12-29)
+
+* Display content in `choice-radio` is now rendered in a div.form-answer rather than a p.form-answer
+  because it may contain markup elements that are not valid in a <p> e.g. <ul> and similar.
+
+* Add a `bordered_choices` option to `choice-radio` fields to style more like a list-group with borders around
+  each choice - useful in cases where the description / content of a choice-radio is longer than one line and
+  you want to provide more visual clarity around the meaning of each choice.
+
+* Automatically highlight selected `choice-radio` block in edit mode
+  Adds a simple pure-javascript handler to automatically toggle `choice--selected` classes on a radio input on modern
+  browsers. Also introduces a simple LESS file that can be combined into a bootstrap3 build to style choice--selected
+  with a `success` background.
+
+* Render `choice-radio` field values without HTML escaping in display mode.
+  These captions come from the schema, not user input, and they are not HTML-escaped in the edit mode template
+  so should also be displayed 'raw' in display mode (choice-radio can be used for choices that need explanatory
+  text or other HTML content in their selections).
+
+* Add a display template mapping for `date` fields
+
 ## v1.3.0 (2022-11-17)
 
 * Support PHP 8.1 and PHP 8.2
