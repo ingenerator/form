@@ -1,5 +1,8 @@
 ### Unreleased
 
+* Display content in `choice-radio` is now rendered in a div.form-answer rather than a p.form-answer
+  because it may contain markup elements that are not valid in a <p> e.g. <ul> and similar.
+
 * Add a `bordered_choices` option to `choice-radio` fields to style more like a list-group with borders around
   each choice - useful in cases where the description / content of a choice-radio is longer than one line and
   you want to provide more visual clarity around the meaning of each choice.
