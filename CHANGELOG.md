@@ -1,5 +1,7 @@
 ### Unreleased
 
+## v1.4.0 (2022-12-29)
+
 * Display content in `choice-radio` is now rendered in a div.form-answer rather than a p.form-answer
   because it may contain markup elements that are not valid in a <p> e.g. <ul> and similar.
 
