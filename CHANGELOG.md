@@ -1,5 +1,11 @@
 ### Unreleased
 
+## v1.5.0 (2024-02-08)
+
+* Drop support for PHP 8.0 and 8.1
+* Support kohana-extras v3
+* Support php-utils v2
+
 ## v1.4.0 (2022-12-29)
 
 * Display content in `choice-radio` is now rendered in a div.form-answer rather than a p.form-answer
