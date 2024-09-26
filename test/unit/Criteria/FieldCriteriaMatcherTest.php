@@ -9,8 +9,10 @@ namespace test\unit\Teamdetails\Form\Criteria;
 
 use Ingenerator\Form\Criteria\FieldCriteriaMatcher;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-class FieldCriteriaMatcherTest extends \PHPUnit\Framework\TestCase {
+class FieldCriteriaMatcherTest extends TestCase {
 
     public function test_it_is_initialisable()
     {
@@ -22,20 +24,14 @@ class FieldCriteriaMatcherTest extends \PHPUnit\Framework\TestCase {
         $this->assertFalse($this->newSubject()->matches('foo', []));
     }
 
-    /**
-     * @param string $empty_value
-     * @dataProvider provider_empty_values
-     */
-    public function test_it_does_not_match_not_empty_criteria_with_empty_value($empty_value)
+    #[DataProvider('provider_empty_values')]
+    public function test_it_does_not_match_not_empty_criteria_with_empty_value(mixed $empty_value)
     {
         $this->assertFalse($this->newSubject()->matches($empty_value, ['not_empty']));
     }
 
-    /**
-     * @param string $not_empty_value
-     * @dataProvider provider_not_empty_values
-     */
-    public function test_it_matches_not_empty_criteria_with_not_empty_value($not_empty_value)
+    #[DataProvider('provider_not_empty_values')]
+    public function test_it_matches_not_empty_criteria_with_not_empty_value(mixed $not_empty_value)
     {
         $this->assertTrue($this->newSubject()->matches($not_empty_value, ['not_empty']));
     }
@@ -74,7 +70,7 @@ class FieldCriteriaMatcherTest extends \PHPUnit\Framework\TestCase {
         $this->newSubject()->matches('stuff', ['random']);
     }
 
-    public function provider_not_empty_values()
+    public static function provider_not_empty_values(): array
     {
         return [
             ['foo'],
@@ -83,7 +79,7 @@ class FieldCriteriaMatcherTest extends \PHPUnit\Framework\TestCase {
         ];
     }
 
-    public function provider_empty_values()
+    public static function provider_empty_values(): array
     {
         return [
             [NULL],
@@ -93,7 +89,7 @@ class FieldCriteriaMatcherTest extends \PHPUnit\Framework\TestCase {
     }
 
 
-    protected function newSubject()
+    protected function newSubject(): FieldCriteriaMatcher
     {
         return new FieldCriteriaMatcher();
     }

@@ -7,14 +7,17 @@
 namespace test\unit\Ingenerator\Form\Element\Field;
 
 
+use Arr;
 use Ingenerator\Form\Element\Field\ChoiceField;
 use Ingenerator\Form\Element\Field\ChoiceOrOtherField;
 use Ingenerator\Form\Element\Field\TextField;
-use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTest;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTestCase;
 use Ingenerator\Form\Util\FormDataArray;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\TestWith;
+use function array_merge;
 
-class ChoiceOrOtherFieldTest extends BaseFieldTest
+class ChoiceOrOtherFieldTest extends BaseFieldTestCase
 {
 
     public function test_it_is_initialisable()
@@ -22,9 +25,9 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
         $this->assertInstanceOf(ChoiceOrOtherField::class, $this->newSubject());
     }
 
-    public function provider_required_options()
+    public static function provider_required_options(): array
     {
-        $required   = parent::provider_required_options();
+        $required   = BaseFieldTestCase::provider_required_options();
         $required[] = ['choices'];
         $required[] = ['other_for_values'];
 
@@ -32,7 +35,7 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
     }
 
 
-    public function provider_valid_options_and_defaults()
+    public static function provider_valid_options_and_defaults(): array
     {
         $options   = parent::provider_valid_options_and_defaults();
         $options['length'] = ['length', NULL, 'short'];
@@ -58,7 +61,7 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
                 'length'  => 'short'
             ]
         );
-        $this->assertInstanceOf(\Ingenerator\Form\Element\Field\ChoiceField::class, $subject->choice_field);
+        $this->assertInstanceOf(ChoiceField::class, $subject->choice_field);
         $this->assertSame('info[choice]', $subject->choice_field->name);
         $this->assertSame('short', $subject->choice_field->length);
         $this->assertSame('Information', $subject->choice_field->label);
@@ -71,10 +74,8 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
         );
     }
 
-    /**
-     * @testWith [true, ["", "No", "Yes"]]
-     *           [false, ["No", "Yes"]]
-     */
+    #[TestWith([true, ['', 'No', 'Yes']])]
+    #[TestWith([false, ['No', 'Yes']])]
     public function test_it_propogates_add_empty_choice_option_to_the_choice_subfield($add_empty, $expect_choices)
     {
         $subject = $this->newSubject(
@@ -83,7 +84,7 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
                 'choices' => ['No', 'Yes']
             ]
         );
-        $this->assertSame($expect_choices, \Arr::pluck($subject->choice_field->choices, 'value'));
+        $this->assertSame($expect_choices, Arr::pluck($subject->choice_field->choices, 'value'));
     }
 
     public function test_it_has_text_subfield_for_detail()
@@ -109,11 +110,9 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
         $this->assertSame('', $subject->detail_field->html_value, 'Detail should be empty');
     }
 
-    /**
-     * @testWith [{}, {"choice":"", "detail": ""}]
-     *           [{"choice": "One"}, {"choice":"One", "detail": ""}]
-     *           [{"choice": "One", "detail": "Other"}, {"choice":"One", "detail": "Other"}]
-     */
+    #[TestWith([[], ['choice' => '', 'detail' => '']])]
+    #[TestWith([['choice' => 'One'], ['choice' => 'One', 'detail' => '']])]
+    #[TestWith([['choice' => 'One', 'detail' => 'Other'], ['choice' => 'One', 'detail' => 'Other']])]
     public function test_it_assigns_values_to_subfields($values, $expect)
     {
         $subject = $this->newSubject(
@@ -129,13 +128,11 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
         );
     }
 
-    /**
-     * @testWith [{"choice":"One", "detail": null}, "One"]
-     *           [{"choice":"One", "detail": "thing"}, "One"]
-     *           [{"choice":"Another", "detail": "Thing"}, "Another - Thing"]
-     *           [{"choice":"Other", "detail": "Thing"}, "Other - Thing"]
-     *           [{"choice":"Other", "detail": null}, "Other - "]
-     */
+    #[TestWith([['choice' => 'One', 'detail' => null], 'One'])]
+    #[TestWith([['choice' => 'One', 'detail' => 'thing'], 'One'])]
+    #[TestWith([['choice' => 'Another', 'detail' => 'Thing'], 'Another - Thing'])]
+    #[TestWith([['choice' => 'Other', 'detail' => 'Thing'], 'Other - Thing'])]
+    #[TestWith([['choice' => 'Other', 'detail' => null], 'Other - '])]
     public function test_its_display_value_combines_both_fields_as_appropriate(
         $value,
         $expect_display
@@ -151,12 +148,10 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
         $this->assertEquals($expect_display, $subject->display_value);
     }
 
-    /**
-     * @testWith [{}, {"choice":null, "detail": null}]
-     *           [{"choice": "One"}, {"choice":"One", "detail": null}]
-     *           [{"choice": "Other", "detail": "Red"}, {"choice":"Other", "detail": "Red"}]
-     *           [{"choice": "Two", "detail": "Red"}, {"choice":"Two", "detail": null}]
-     */
+    #[TestWith([[], ['choice' => null, 'detail' => null]])]
+    #[TestWith([['choice' => 'One'], ['choice' => 'One', 'detail' => null]])]
+    #[TestWith([['choice' => 'Other', 'detail' => 'Red'], ['choice' => 'Other', 'detail' => 'Red']])]
+    #[TestWith([['choice' => 'Two', 'detail' => 'Red'], ['choice' => 'Two', 'detail' => null]])]
     public function test_it_collects_choice_and_detail_field_values($values, $expect)
     {
         $subject = $this->newSubject(
@@ -176,12 +171,7 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
         $this->markTestIncomplete('What about the top-level label, empty value, other properties?');
     }
 
-    /**
-     * @param array $values
-     *
-     * @return \Ingenerator\Form\Element\Field\ChoiceOrOtherField
-     */
-    protected function newSubject(array $values = [])
+    protected function newSubject(array $values = []): ChoiceOrOtherField
     {
         $default = [
             'name'             => 'foofield',
@@ -190,7 +180,7 @@ class ChoiceOrOtherFieldTest extends BaseFieldTest
             'other_for_values' => ['Other']
         ];
 
-        return new \Ingenerator\Form\Element\Field\ChoiceOrOtherField(\array_merge($default, $values), $this->getElementFactory());
+        return new ChoiceOrOtherField(array_merge($default, $values), $this->getElementFactory());
     }
 
 }

@@ -8,9 +8,13 @@ namespace test\unit\Ingenerator\Form\Helper;
 
 
 use Ingenerator\Form\Util\ShowgroupHelper;
+use PHPUnit\Framework\TestCase;
 
-class ShowgroupHelperTest extends \PHPUnit\Framework\TestCase {
+class ShowgroupHelperTest extends TestCase {
 
+    /**
+     * @var string
+     */
     protected $value;
 
     public function test_it_is_initialisable()
@@ -52,7 +56,7 @@ class ShowgroupHelperTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    protected function newSubject()
+    protected function newSubject(): ShowgroupHelper
     {
         return new ShowgroupHelper($this->value);
     }

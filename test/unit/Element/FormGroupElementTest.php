@@ -7,14 +7,17 @@
 namespace test\unit\Ingenerator\Form\Element;
 
 
+use Ingenerator\Form\Element\AbstractFormElement;
 use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\Element\FormGroupElement;
-use Ingenerator\Form\TestSupport\PHPUnit10\BaseFormElementTest;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFormElementTestCase;
 use Ingenerator\Form\Util\FormDataArray;
+use PHPUnit\Framework\Attributes\TestWith;
+use function array_merge;
 
-class FormGroupElementTest extends BaseFormElementTest
+class FormGroupElementTest extends BaseFormElementTestCase
 {
-    public function provider_required_options()
+    public static function provider_required_options(): array
     {
         return [
             ['label'],
@@ -22,7 +25,7 @@ class FormGroupElementTest extends BaseFormElementTest
         ];
     }
 
-    public function provider_valid_options_and_defaults()
+    public static function provider_valid_options_and_defaults(): array
     {
         $defaults   = parent::provider_valid_options_and_defaults();
         $defaults[] = ['container_data', [], ['data-showgroup', 'data-show' => 'stuff']];
@@ -55,11 +58,9 @@ class FormGroupElementTest extends BaseFormElementTest
         );
     }
 
-    /**
-     * @testWith [{}, "", ""]
-     *           [{"email": "foo@bar.net"}, "foo@bar.net", ""]
-     *           [{"detail": {"field": "stuff"}, "email": "foo@bar.net"}, "foo@bar.net", "stuff"]
-     */
+    #[TestWith([[], '', ''])]
+    #[TestWith([['email' => 'foo@bar.net'], 'foo@bar.net', ''])]
+    #[TestWith([['detail' => ['field' => 'stuff'], 'email' => 'foo@bar.net'], 'foo@bar.net', 'stuff'])]
     public function test_it_assigns_values_to_all_child_elements($value, $expect_1, $expect_2)
     {
         $subject = $this->newSubject(
@@ -81,10 +82,8 @@ class FormGroupElementTest extends BaseFormElementTest
         );
     }
 
-    /**
-     * @testWith [{}, {"email": null, "detail": {"about": {"field": null}}}]
-     *           [{"email": "foo@bar.net"}, {"email": "foo@bar.net", "detail": {"about": {"field": null}}}]
-     */
+    #[TestWith([[], ['email' => null, 'detail' => ['about' => ['field' => null]]]])]
+    #[TestWith([['email' => 'foo@bar.net'], ['email' => 'foo@bar.net', 'detail' => ['about' => ['field' => null]]]])]
     public function test_it_collects_all_child_field_values($data, $expect)
     {
         $subject = $this->newSubject(
@@ -113,10 +112,8 @@ class FormGroupElementTest extends BaseFormElementTest
         $this->assertCollectsValues([], $subject);
     }
 
-    /**
-     * @testWith [{}, [[], []]]
-     *           [{"email": ["Not an email"], "detail": {"about": ["Invalid"]}}, [["Not an email"],["Invalid"]]]
-     */
+    #[TestWith([[], [[], []]])]
+    #[TestWith([['email' => ['Not an email'], 'detail' => ['about' => ['Invalid']]], [['Not an email'], ['Invalid']]])]
     public function test_it_assigns_errors_to_child_fields($errors, $expect)
     {
         $subject = $this->newSubject(
@@ -134,19 +131,14 @@ class FormGroupElementTest extends BaseFormElementTest
         }
     }
 
-    /**
-     * @param array $values
-     *
-     * @return \Ingenerator\Form\Element\FormGroupElement
-     */
-    protected function newSubject(array $values = [])
+    protected function newSubject(array $values = []): AbstractFormElement
     {
         $default = [
             'label'  => 'General',
             'fields' => [['type' => 'text', 'name' => 'foo', 'label' => 'foo']]
         ];
 
-        return new FormGroupElement(\array_merge($default, $values), $this->getElementFactory());
+        return new FormGroupElement(array_merge($default, $values), $this->getElementFactory());
     }
 
 }

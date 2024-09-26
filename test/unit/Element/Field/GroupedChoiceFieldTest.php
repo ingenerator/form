@@ -8,11 +8,14 @@ namespace test\unit\Ingenerator\Form\Element\Field;
 
 
 use Ingenerator\Form\Element\Field\GroupedChoiceField;
-use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTest;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTestCase;
 use Ingenerator\Form\Util\FormDataArray;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
+use function array_merge;
 
-class GroupedChoiceFieldTest extends BaseFieldTest
+class GroupedChoiceFieldTest extends BaseFieldTestCase
 {
     public function test_it_is_initialisable_from_schema_array()
     {
@@ -22,16 +25,16 @@ class GroupedChoiceFieldTest extends BaseFieldTest
         );
     }
 
-    public function provider_required_options()
+    public static function provider_required_options(): array
     {
-        $required   = parent::provider_required_options();
+        $required   = BaseFieldTestCase::provider_required_options();
         $required[] = ['choice_groups'];
 
         return $required;
     }
 
 
-    public function provider_valid_options_and_defaults()
+    public static function provider_valid_options_and_defaults(): array
     {
         $options   = parent::provider_valid_options_and_defaults();
         $options['length'] = ['length', NULL, 'short'];
@@ -40,7 +43,7 @@ class GroupedChoiceFieldTest extends BaseFieldTest
         return $options;
     }
 
-    public function provider_invalid_choice_groups()
+    public static function provider_invalid_choice_groups(): array
     {
         return [
             [
@@ -87,18 +90,14 @@ class GroupedChoiceFieldTest extends BaseFieldTest
         ];
     }
 
-    /**
-     * @dataProvider provider_invalid_choice_groups
-     */
+    #[DataProvider('provider_invalid_choice_groups')]
     public function test_it_throws_if_choice_groups_not_valid($choice_groups)
     {
         $this->expectException(InvalidArgumentException::class);
         $this->newSubject(['choice_groups' => $choice_groups]);
     }
 
-    /**
-     * @testWith [{"constraints": ["required"]}]
-     */
+    #[TestWith([['constraints' => ['required']]])]
     public function test_it_accepts_html5_constraints($schema)
     {
         $subject = $this->newSubject($schema);
@@ -137,7 +136,7 @@ class GroupedChoiceFieldTest extends BaseFieldTest
         $this->assertChoiceSelected('_empty_', $subject);
     }
 
-    public function provider_value_assignment()
+    public static function provider_value_assignment(): array
     {
         return [
             ['', ['html' => '', 'selected' => '_empty_', 'display' => NULL]],
@@ -150,9 +149,7 @@ class GroupedChoiceFieldTest extends BaseFieldTest
         ];
     }
 
-    /**
-     * @dataProvider provider_value_assignment
-     */
+    #[DataProvider('provider_value_assignment')]
     public function test_it_can_assign_value_and_mark_option_selected_or_empty_if_invalid(
         $assign,
         $expect
@@ -242,10 +239,8 @@ class GroupedChoiceFieldTest extends BaseFieldTest
         );
     }
 
-    /**
-     * @testWith ["", null]
-     *           ["anything", "anything"]
-     */
+    #[TestWith(['', null])]
+    #[TestWith(['anything', 'anything'])]
     public function test_it_maps_html_value_to_null_or_string_for_collection($html_value, $expect)
     {
         $subject = $this->newSubject(['name' => 'field']);
@@ -254,12 +249,7 @@ class GroupedChoiceFieldTest extends BaseFieldTest
         $this->assertCollectsValues(['field' => $expect], $subject);
     }
 
-    /**
-     * @param array $values
-     *
-     * @return GroupedChoiceField
-     */
-    protected function newSubject(array $values = [])
+    protected function newSubject(array $values = []): GroupedChoiceField
     {
         $default = [
             'name'          => 'foofield',
@@ -272,14 +262,10 @@ class GroupedChoiceFieldTest extends BaseFieldTest
             ]
         ];
 
-        return new GroupedChoiceField(\array_merge($default, $values));
+        return new GroupedChoiceField(array_merge($default, $values));
     }
 
-    /**
-     * @param string             $expect
-     * @param GroupedChoiceField $field
-     */
-    protected function assertChoiceSelected($expect, GroupedChoiceField $field)
+    protected function assertChoiceSelected(string $expect, GroupedChoiceField $field): void
     {
         $selected = [];
         if ($field->is_empty_selected) {
@@ -296,6 +282,5 @@ class GroupedChoiceFieldTest extends BaseFieldTest
         }
         $this->assertEquals([$expect], $selected, 'Expect correct selected choice(s)');
     }
-
 
 }

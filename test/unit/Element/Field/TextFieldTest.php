@@ -8,17 +8,19 @@ namespace test\unit\Ingenerator\Form\Element\Field;
 
 
 use Ingenerator\Form\Element\Field\TextField;
-use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTest;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTestCase;
 use Ingenerator\Form\Util\FormDataArray;
+use PHPUnit\Framework\Attributes\TestWith;
+use function array_merge;
 
-class TextFieldTest extends BaseFieldTest
+class TextFieldTest extends BaseFieldTestCase
 {
     public function test_it_is_initialisable_from_schema_array()
     {
         $this->assertInstanceOf(TextField::class, $this->newSubject());
     }
 
-    public function provider_valid_options_and_defaults()
+    public static function provider_valid_options_and_defaults(): array
     {
         $options   = parent::provider_valid_options_and_defaults();
         $options['text_type'] = ['text_type', 'text', 'email'];
@@ -27,14 +29,12 @@ class TextFieldTest extends BaseFieldTest
         return $options;
     }
 
-    /**
-     * @testWith [{"type": "text", "constraints": ["required"]}]
-     *           [{"type": "text", "constraints": {"maxlength": "30"}}]
-     *           [{"type": "text", "constraints": {"pattern": "^\\d+"}}]
-     *           [{"type": "number", "constraints": {"min": "12"}}]
-     *           [{"type": "number", "constraints": {"max": "15"}}]
-     *           [{"type": "number", "constraints": {"min": 12, "step": 1, "max": 15}}]
-     */
+    #[TestWith([['type' => 'text', 'constraints' => ['required']]])]
+    #[TestWith([['type' => 'text', 'constraints' => ['maxlength' => 30]]])]
+    #[TestWith([['type' => 'text', 'constraints' => ['pattern' => '^\d+']]])]
+    #[TestWith([['type' => 'number', 'constraints' => ['min' => 12]]])]
+    #[TestWith([['type' => 'number', 'constraints' => ['max' => 15]]])]
+    #[TestWith([['type' => 'number', 'constraints' => ['min' => 12, 'step' => 1, 'max' => 15]]])]
     public function test_it_accepts_html5_constraints($schema)
     {
         $subject = $this->newSubject($schema);
@@ -51,12 +51,10 @@ class TextFieldTest extends BaseFieldTest
         $this->assertSame('', $this->newSubject()->html_value);
     }
 
-    /**
-     * @testWith [{}, "", null]
-     *           [{"field": ""}, "", null]
-     *           [{"field": "0"}, "0", null]
-     *           [{"field": "anything"}, "anything", "anything"]
-     */
+    #[TestWith([[], '', null])]
+    #[TestWith([['field' => ''], '', null])]
+    #[TestWith([['field' => '0'], '0', null])]
+    #[TestWith([['field' => 'anything'], 'anything', 'anything'])]
     public function test_it_can_assign_value(array $values, $expect_html, $expect_display)
     {
         $subject = $this->newSubject(['name' => 'field']);
@@ -65,11 +63,9 @@ class TextFieldTest extends BaseFieldTest
         $this->assertSame($expect_display, $subject->display_value, 'display_value should match html_value');
     }
 
-    /**
-     * @testWith ["", null]
-     *           ["anything", "anything"]
-     *           ["0", "0"]
-     */
+    #[TestWith(['', null])]
+    #[TestWith(['anything', 'anything'])]
+    #[TestWith(['0', '0'])]
     public function test_it_maps_html_value_to_null_or_string_for_collection($html_value, $expect)
     {
         $subject = $this->newSubject(['name' => 'field']);
@@ -78,21 +74,14 @@ class TextFieldTest extends BaseFieldTest
         $this->assertCollectsValues(['field' => $expect], $subject);
     }
 
-    /**
-     * @param array $values
-     *
-     * @return \Ingenerator\Form\Element\Field\TextField
-     */
-    protected function newSubject(array $values = [])
+    protected function newSubject(array $values = []): TextField
     {
         $default = [
             'name'  => 'foofield',
             'label' => 'What\'s the best foo?'
         ];
 
-        return new TextField(\array_merge($default, $values));
+        return new TextField(array_merge($default, $values));
     }
 
 }
-
-

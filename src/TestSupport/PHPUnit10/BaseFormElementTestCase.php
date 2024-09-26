@@ -9,29 +9,32 @@ namespace Ingenerator\Form\TestSupport\PHPUnit10;
 
 use DomainException;
 use Ingenerator\Form\Element\AbstractFormElement;
+use Ingenerator\Form\Element\Field\AbstractFormField;
+use Ingenerator\Form\Element\FormValueElement;
 use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\Util\FormDataArray;
 use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+use function get_class;
 
-abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
+abstract class BaseFormElementTestCase extends TestCase
 {
 
-    public function provider_required_options()
+    public static function provider_required_options(): array
     {
         return [];
     }
 
-    public function provider_valid_options_and_defaults()
+    public static function provider_valid_options_and_defaults(): array
     {
         return [];
     }
 
-    /**
-     * @dataProvider provider_required_options
-     */
+    #[DataProvider('provider_required_options')]
     public function test_it_cannot_be_constructed_without_required_options($option)
     {
         $this->expectException(DomainException::class);
@@ -57,9 +60,7 @@ abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
         $this->newSubject()->$field = 'cannot-do-this';
     }
 
-    /**
-     * @dataProvider provider_valid_options_and_defaults
-     */
+    #[DataProvider('provider_valid_options_and_defaults')]
     public function test_it_supports_all_expected_options_with_defaults(
         $option,
         $expect_default,
@@ -93,23 +94,18 @@ abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
         $this->assertDoesNotExposeProperty($subject, 'type');
     }
 
-    /**
-     * @param array $values
-     *
-     * @return AbstractFormElement
-     */
-    abstract protected function newSubject(array $values = []);
+    abstract protected function newSubject(array $values = []): AbstractFormElement;
 
     /**
-     * @param                     $expect
-     * @param \Ingenerator\Form\Element\Field\AbstractFormField[] $elements
+     * @param array               $expect
+     * @param AbstractFormField[] $elements
      */
-    protected function assertFieldCollectionEquals(array $expect, array $elements)
+    protected function assertFieldCollectionEquals(array $expect, array $elements): void
     {
         $actual = [];
         foreach ($elements as $index => $field) {
             $actual[$index] = [
-                'class' => \get_class($field),
+                'class' => get_class($field),
                 'name'  => $field->name,
                 'value' => $field->html_value
             ];
@@ -117,30 +113,19 @@ abstract class BaseFormElementTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expect, $actual);
     }
 
-    /**
-     * @param $expect
-     * @param $subject
-     */
-    protected function assertCollectsValues(array $expect, \Ingenerator\Form\Element\FormValueElement $subject)
+    protected function assertCollectsValues(array $expect, FormValueElement $subject): void
     {
         $data = new FormDataArray([]);
         $subject->collectValue($data);
         $this->assertSame($expect, $data->getValues());
     }
 
-    /**
-     * @return \Ingenerator\Form\FormElementFactory
-     */
-    protected function getElementFactory()
+    protected function getElementFactory(): FormElementFactory
     {
         return new FormElementFactory(FormConfig::withDefaults());
     }
 
-    /**
-     * @param \Ingenerator\Form\Element\AbstractFormElement $element
-     * @param string                                        $property
-     */
-    protected function assertDoesNotExposeProperty(AbstractFormElement $element, $property)
+    protected function assertDoesNotExposeProperty(AbstractFormElement $element, string $property): void
     {
         $e = NULL;
         try {

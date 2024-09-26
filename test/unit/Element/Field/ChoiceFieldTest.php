@@ -7,30 +7,32 @@
 namespace test\unit\Ingenerator\Form\Element\Field;
 
 
-use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTest;
+use Ingenerator\Form\Element\Field\ChoiceField;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTestCase;
 use Ingenerator\Form\Util\FormDataArray;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
+use stdClass;
+use function array_merge;
 
-class ChoiceFieldTest extends BaseFieldTest
+class ChoiceFieldTest extends BaseFieldTestCase
 {
     public function test_it_is_initialisable_from_schema_array()
     {
-        $this->assertInstanceOf(
-            \Ingenerator\Form\Element\Field\ChoiceField::class,
-            $this->newSubject()
-        );
+        $this->assertInstanceOf(ChoiceField::class, $this->newSubject());
     }
 
-    public function provider_required_options()
+    public static function provider_required_options(): array
     {
-        $required   = parent::provider_required_options();
+        $required = BaseFieldTestCase::provider_required_options();
         $required[] = ['choices'];
 
         return $required;
     }
 
 
-    public function provider_valid_options_and_defaults()
+    public static function provider_valid_options_and_defaults(): array
     {
         $options   = parent::provider_valid_options_and_defaults();
         $options['length'] = ['length', NULL, 'short'];
@@ -39,10 +41,10 @@ class ChoiceFieldTest extends BaseFieldTest
         return $options;
     }
 
-    public function provider_invalid_choices()
+    public static function provider_invalid_choices(): array
     {
         return [
-            [[new \stdClass]],
+            [[new stdClass]],
             [[['junk' => 'wrong']]],
             [[['caption' => 'missing value']]],
             [[['value' => 'missing caption']]],
@@ -50,18 +52,14 @@ class ChoiceFieldTest extends BaseFieldTest
         ];
     }
 
-    /**
-     * @dataProvider provider_invalid_choices
-     */
+    #[DataProvider('provider_invalid_choices')]
     public function test_it_throws_if_choices_not_simple_string_or_value_caption_array($choices)
     {
         $this->expectException(InvalidArgumentException::class);
         $this->newSubject(['choices' => $choices]);
     }
 
-    /**
-     * @testWith [{"constraints": ["required"]}]
-     */
+    #[TestWith([['constraints' => ['required']]])]
     public function test_it_accepts_html5_constraints($schema)
     {
         $subject = $this->newSubject($schema);
@@ -78,7 +76,7 @@ class ChoiceFieldTest extends BaseFieldTest
         $this->assertSame('', $this->newSubject()->html_value);
     }
 
-    public function provider_auto_empty_choice()
+    public static function provider_auto_empty_choice(): array
     {
         $auto_empty = [
             'value'    => '',
@@ -101,7 +99,7 @@ class ChoiceFieldTest extends BaseFieldTest
                 // By default and with no empty choice in list, prepends auto-empty with custom text
                 ['choices' => ['One'], 'empty_value' => 'Go on, select'],
                 [
-                    \array_merge($auto_empty, ['caption' => 'Go on, select']),
+                    array_merge($auto_empty, ['caption' => 'Go on, select']),
                     ['value' => 'One', 'caption' => 'One', 'selected' => '', 'disabled' => ''],
                 ]
             ],
@@ -132,7 +130,7 @@ class ChoiceFieldTest extends BaseFieldTest
                 // By default and with no empty choice in list, prepends auto-empty with custom text
                 ['choices' => [$one_one], 'empty_value' => 'Do it'],
                 [
-                    \array_merge($auto_empty, ['caption' => 'Do it']),
+                    array_merge($auto_empty, ['caption' => 'Do it']),
                     ['value' => '1', 'caption' => 'One', 'selected' => '', 'disabled' => ''],
                 ]
             ],
@@ -155,9 +153,7 @@ class ChoiceFieldTest extends BaseFieldTest
         ];
     }
 
-    /**
-     * @dataProvider provider_auto_empty_choice
-     */
+    #[DataProvider('provider_auto_empty_choice')]
     public function test_it_prepends_empty_choice_unless_disabled_or_explicit_empty_choice_present(
         $schema,
         $expect_choices
@@ -201,7 +197,7 @@ class ChoiceFieldTest extends BaseFieldTest
         );
     }
 
-    public function provider_value_assignment()
+    public static function provider_value_assignment(): array
     {
         $choice_strings = ['First', 'Second'];
         $choice_list    = [
@@ -223,9 +219,7 @@ class ChoiceFieldTest extends BaseFieldTest
         ];
     }
 
-    /**
-     * @dataProvider provider_value_assignment
-     */
+    #[DataProvider('provider_value_assignment')]
     public function test_it_can_assign_value_and_mark_appropriate_choice_selected_or_empty_if_invalid(
         $choices,
         $assign_val,
@@ -240,10 +234,8 @@ class ChoiceFieldTest extends BaseFieldTest
         $this->assertChoiceSelected($expect['selected'], $subject->choices);
     }
 
-    /**
-     * @testWith ["", null]
-     *           ["anything", "anything"]
-     */
+    #[TestWith(['', NULL])]
+    #[TestWith(['anything', 'anything'])]
     public function test_it_maps_html_value_to_null_or_string_for_collection($html_value, $expect)
     {
         $subject = $this->newSubject(['name' => 'field']);
@@ -252,22 +244,15 @@ class ChoiceFieldTest extends BaseFieldTest
         $this->assertCollectsValues(['field' => $expect], $subject);
     }
 
-    /**
-     * @testWith [["One", "Two"], ["One", "Two"]]
-     *           [[{"value": 1, "caption": "One"}, {"value": 9, "caption": "One"}], ["1", "9"]]
-     */
+    #[TestWith([['One', 'Two'], ['One', 'Two']])]
+    #[TestWith([[['value' => 1, 'caption' => 'One'], ['value' => 9, 'caption' => 'One']], ['1', '9']])]
     public function test_it_can_list_all_valid_choice_values($choices, $expect)
     {
         $subject = $this->newSubject(['choices' => $choices]);
         $this->assertSame($expect, $subject->valid_values);
     }
 
-    /**
-     * @param array $values
-     *
-     * @return \Ingenerator\Form\Element\Field\ChoiceField
-     */
-    protected function newSubject(array $values = [])
+    protected function newSubject(array $values = []): ChoiceField
     {
         $default = [
             'name'    => 'foofield',
@@ -275,14 +260,10 @@ class ChoiceFieldTest extends BaseFieldTest
             'choices' => ['One']
         ];
 
-        return new \Ingenerator\Form\Element\Field\ChoiceField(\array_merge($default, $values));
+        return new ChoiceField(array_merge($default, $values));
     }
 
-    /**
-     * @param string $expect
-     * @param array  $choices
-     */
-    protected function assertChoiceSelected($expect, array $choices)
+    protected function assertChoiceSelected(string $expect, array $choices): void
     {
         $selected = [];
         foreach ($choices as $choice) {

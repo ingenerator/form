@@ -10,9 +10,12 @@ namespace test\unit\Ingenerator\Form\Util;
 use Ingenerator\Form\Util\FormDataArray;
 use InvalidArgumentException;
 use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
+use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
 
-class FormDataArrayTest extends \PHPUnit\Framework\TestCase
+class FormDataArrayTest extends TestCase
 {
 
     public function test_it_is_initialisable()
@@ -60,7 +63,7 @@ class FormDataArrayTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('value', $subject->getRawValue('foo[bar][0][biz]'));
     }
 
-    public function provider_invalid_fieldnames()
+    public static function provider_invalid_fieldnames(): array
     {
         return [
             ['foo[bar[bazl]'],
@@ -68,29 +71,23 @@ class FormDataArrayTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider provider_invalid_fieldnames
-     */
+    #[DataProvider('provider_invalid_fieldnames')]
     public function test_it_throws_from_raw_value_with_invalid_fieldname($name)
     {
         $this->expectException(InvalidArgumentException::class);
         $this->newSubject([])->getRawValue($name);
     }
 
-    /**
-     * @dataProvider provider_invalid_fieldnames
-     */
+    #[DataProvider('provider_invalid_fieldnames')]
     public function test_it_throws_when_setting_invalid_fieldname($name)
     {
         $this->expectException(InvalidArgumentException::class);
         $this->newSubject([])->setFieldValue($name, NULL);
     }
 
-    /**
-     * @testWith ["foo[bar]"]
-     *           ["foo[bar][bex]"]
-     *           ["foo[bar][bex][data]"]
-     */
+    #[TestWith(['foo[bar]'])]
+    #[TestWith(['foo[bar][bex]'])]
+    #[TestWith(['foo[bar][bex][data]'])]
     public function test_it_throws_if_attempting_to_reassign_existing_key($bad_path)
     {
         $subject = $this->newSubject([]);
@@ -208,12 +205,7 @@ class FormDataArrayTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @param array $data
-     *
-     * @return FormDataArray
-     */
-    protected function newSubject(array $data)
+    protected function newSubject(array $data): FormDataArray
     {
         return new FormDataArray($data);
     }

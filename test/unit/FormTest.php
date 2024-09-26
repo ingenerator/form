@@ -9,15 +9,27 @@ namespace test\unit\Ingenerator\Form;
 
 use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\Form;
-use Ingenerator\Form\TestSupport\PHPUnit10\BaseFormElementTest;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFormElementTestCase;
+use PHPUnit\Framework\Attributes\TestWith;
+use function array_merge;
 
-class FormTest extends BaseFormElementTest
+class FormTest extends BaseFormElementTestCase
 {
-    public function provider_required_options()
+    public static function provider_required_options(): array
     {
         return [
             ['elements']
         ];
+    }
+
+    public function test_it_supports_all_expected_options_with_defaults(
+        $option = NULL,
+        $expect_default = NULL,
+        $custom_val = NULL
+    ) {
+        // it's not valid to have an empty data provider - this test is not relevant to this "FormElement" so
+        // politely override it
+        $this->addToAssertionCount(1);
     }
 
     public function test_it_has_all_child_elements()
@@ -40,11 +52,9 @@ class FormTest extends BaseFormElementTest
         );
     }
 
-    /**
-     * @testWith [{}, "", ""]
-     *           [{"email": "foo@bar.net"}, "foo@bar.net", ""]
-     *           [{"detail": {"field": "stuff"}, "email": "foo@bar.net"}, "foo@bar.net", "stuff"]
-     */
+    #[TestWith([[], '', ''])]
+    #[TestWith([['email' => 'foo@bar.net'], 'foo@bar.net', ''])]
+    #[TestWith([['detail' => ['field' => 'stuff'], 'email' => 'foo@bar.net'], 'foo@bar.net', 'stuff'])]
     public function test_it_sets_all_child_element_values($value, $expect_1, $expect_2)
     {
         $subject = $this->newSubject(
@@ -66,10 +76,8 @@ class FormTest extends BaseFormElementTest
         );
     }
 
-    /**
-     * @testWith [{}, {"email": null, "detail": {"about": {"field": null}}}]
-     *           [{"email": "foo@bar.net"}, {"email": "foo@bar.net", "detail": {"about": {"field": null}}}]
-     */
+    #[TestWith([[], ['email' => NULL, 'detail' => ['about' => ['field' => NULL]]]])]
+    #[TestWith([['email' => 'foo@bar.net'], ['email' => 'foo@bar.net', 'detail' => ['about' => ['field' => NULL]]]])]
     public function test_it_returns_hash_of_child_element_domain_values($data, $expect)
     {
         $subject = $this->newSubject(
@@ -84,10 +92,8 @@ class FormTest extends BaseFormElementTest
         $this->assertSame($expect, $subject->getValues());
     }
 
-    /**
-     * @testWith [{}, [[], []]]
-     *           [{"email": ["Not an email"], "detail": {"about": ["Invalid"]}}, [["Not an email"],["Invalid"]]]
-     */
+    #[TestWith([[], [[], []]])]
+    #[TestWith([['email' => ['Not an email'], 'detail' => ['about' => ['Invalid']]], [['Not an email'], ['Invalid']]])]
     public function test_it_assigns_errors_to_child_fields($errors, $expect)
     {
         $subject = $this->newSubject(
@@ -105,11 +111,9 @@ class FormTest extends BaseFormElementTest
         }
     }
 
-    /**
-     * @testWith [[], false]
-     *           [{"email": "That's not an email"}, true]
-     *           [{"undefined": "No field for this one"}, true]
-     */
+    #[TestWith([[], FALSE])]
+    #[TestWith([['email' => "That's not an email"], TRUE])]
+    #[TestWith([['undefined' => 'No field for this one'], TRUE])]
     public function test_it_has_errors_if_any_errors_have_been_assigned($errors, $expect)
     {
         $subject = $this->newSubject(
@@ -144,18 +148,13 @@ class FormTest extends BaseFormElementTest
         $this->assertSame([], $subject->getValues());
     }
 
-    /**
-     * @param array $values
-     *
-     * @return \Ingenerator\Form\Form
-     */
-    protected function newSubject(array $values = [])
+    protected function newSubject(array $values = []): Form
     {
         $default = [
             'elements' => [['type' => 'text', 'name' => 'foo', 'label' => 'foo']]
         ];
 
-        return new Form(\array_merge($default, $values), $this->getElementFactory());
+        return new Form(array_merge($default, $values), $this->getElementFactory());
     }
 
 }
