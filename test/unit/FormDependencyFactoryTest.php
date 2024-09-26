@@ -13,9 +13,9 @@ use Ingenerator\Form\FormDependencyFactory;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\FormValidator;
 use Ingenerator\Form\Renderer\FormEditRenderer;
-use test\unit\Ingenerator\KohanaExtras\DependencyFactory\AbstractDependencyFactoryTest;
+use PHPUnit\Framework\TestCase;
 
-class FormDependencyFactoryTest extends AbstractDependencyFactoryTest
+class FormDependencyFactoryTest extends TestCase
 {
 
     public function test_it_defines_form_config()
@@ -65,6 +65,22 @@ class FormDependencyFactoryTest extends AbstractDependencyFactoryTest
 
     protected function getService($service)
     {
-        return $this->assertDefinesService($service, FormDependencyFactory::definitions());
+        // borrowed from kohana-extras AbstractDependencyFactoryTest
+        $list = \Dependency_Definition_List::factory()->from_array(FormDependencyFactory::definitions());
+        try {
+            $list->get($service);
+        } catch (\Exception $e) {
+            $this->fail('Service `'.$service.'` is not defined: ['.\get_class($e).'] '.$e->getMessage());
+        }
+
+        $container = new \Dependency_Container($list);
+
+        try {
+            return $container->get($service);
+        } catch (\Dependency_Exception $e) {
+            $this->fail('Cannot instantiate service `'.$service.'` - missing dependency? : '.$e->getMessage());
+        } catch (\Exception $e) {
+            $this->fail('Cannot instantiate service `'.$service.'`: ['.\get_class($e).'] '.$e->getMessage());
+        }
     }
 }
