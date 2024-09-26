@@ -4,7 +4,7 @@
  * @licence   proprietary
  */
 
-namespace test\unit\Ingenerator\Form\Element;
+namespace Ingenerator\Form\TestSupport\PHPUnit10;
 
 
 use DomainException;

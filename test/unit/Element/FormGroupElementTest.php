@@ -9,6 +9,7 @@ namespace test\unit\Ingenerator\Form\Element;
 
 use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\Element\FormGroupElement;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFormElementTest;
 use Ingenerator\Form\Util\FormDataArray;
 
 class FormGroupElementTest extends BaseFormElementTest

@@ -8,6 +8,7 @@ namespace test\unit\Ingenerator\Form\Element;
 
 
 use Ingenerator\Form\Element\BodyTextFormElement;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFormElementTest;
 
 class BodyTextFormElementTest extends BaseFormElementTest
 {

@@ -7,6 +7,7 @@
 namespace test\unit\Ingenerator\Form\Element\Field;
 
 
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTest;
 use Ingenerator\Form\Util\FormDataArray;
 
 class TextareaFieldTest extends BaseFieldTest

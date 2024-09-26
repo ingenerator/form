@@ -4,13 +4,12 @@
  * @licence   proprietary
  */
 
-namespace test\unit\Ingenerator\Form\Element\Field;
+namespace Ingenerator\Form\TestSupport\PHPUnit10;
 
 
 use Ingenerator\Form\Element\Field\AbstractFormField;
 use Ingenerator\Form\Util\FormDataArray;
 use InvalidArgumentException;
-use test\unit\Ingenerator\Form\Element\BaseFormElementTest;
 
 abstract class BaseFieldTest extends BaseFormElementTest
 {

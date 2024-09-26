@@ -9,6 +9,7 @@ namespace test\unit\Ingenerator\Form\Element\Field;
 
 use Ingenerator\Form\Element\Field\RoughDateRangeField;
 use Ingenerator\Form\Element\Field\TextField;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTest;
 use Ingenerator\Form\Util\FormDataArray;
 use InvalidArgumentException;
 
