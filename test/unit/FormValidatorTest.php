@@ -7,6 +7,8 @@
 namespace test\unit\Ingenerator\Form;
 
 
+use Arr;
+use Ingenerator\Form\Element\Field\AbstractFormField;
 use Ingenerator\Form\Form;
 use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
@@ -14,8 +16,18 @@ use Ingenerator\Form\FormValidator;
 use Ingenerator\Form\UnsupportedValidationException;
 use Ingenerator\KohanaExtras\Validation\TestConstraint\ValidationRulesMatch;
 use Ingenerator\PHPUtils\Object\ObjectPropertyRipper;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
+use PHPUnit\Framework\TestCase;
+use function array_diff;
+use function array_filter;
+use function array_map;
+use function array_merge;
+use function array_unique;
+use function func_get_args;
+use function uniqid;
 
-class FormValidatorTest extends \PHPUnit\Framework\TestCase
+class FormValidatorTest extends TestCase
 {
 
     public function test_it_is_initialisable()
@@ -23,7 +35,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(FormValidator::class, $this->newSubject());
     }
 
-    public function provider_supported_field_types()
+    public static function provider_supported_field_types(): array
     {
         return [
             [['type' => 'text']],
@@ -37,7 +49,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function provider_unsupported_field_types()
+    public static function provider_unsupported_field_types(): array
     {
         // This is a safety test. If you try to use the server-side validator on a form that has
         // constraints we have not implemented yet, it will throw at you (at development time).
@@ -47,11 +59,11 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         // added to the automatic `unsupported` list.
         $all_types = FormConfig::withDefaults()->listDefinedElementTypes();
         $supported = ['body-text'];
-        foreach ($this->provider_supported_field_types() as $supported_type) {
+        foreach (static::provider_supported_field_types() as $supported_type) {
             $supported[] = $supported_type[0]['type'];
         }
         $unsupported = [];
-        foreach (\array_diff($all_types, \array_unique($supported)) as $type) {
+        foreach (array_diff($all_types, array_unique($supported)) as $type) {
             $unsupported[] = [['type' => $type]];
         }
 
@@ -69,16 +81,14 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
                 'constraints' => ['max' => 15],
             ],
         ];
-        $unsupported[] = [['type' => 'text', 'text_type' => \uniqid('anything')]];
+        $unsupported[] = [['type' => 'text', 'text_type' => uniqid('anything')]];
         $unsupported[] = [['type' => 'text', 'constraints' => ['pattern']]];
         $unsupported[] = [['type' => 'text', 'constraints' => ['required', 'pattern']]];
 
         return $unsupported;
     }
 
-    /**
-     * @dataProvider provider_unsupported_field_types
-     */
+    #[DataProvider('provider_unsupported_field_types')]
     public function test_it_throws_if_unsupported_field_types_or_constraints($element_schema)
     {
         $form = $this->givenFormWithElements($element_schema);
@@ -86,9 +96,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         $this->newSubject()->validate($form);
     }
 
-    /**
-     * @dataProvider  provider_supported_field_types
-     */
+    #[DataProvider('provider_supported_field_types')]
     public function test_it_validates_supported_types_without_throwing($element)
     {
         $form = $this->givenFormWithElements($element);
@@ -112,10 +120,8 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @testWith [[], {"email": [":value"]}]
-     *           [["required"], {"email": [":value"], "not_empty": [":value"]}]
-     */
+    #[TestWith([[], ['email' => [':value']]])]
+    #[TestWith([['required'], ['email' => [':value'], 'not_empty' => [':value']]])]
     public function test_it_builds_validation_with_constraints_for_email_text_field(
         $constraints,
         $expect
@@ -133,12 +139,10 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         $this->assertBuildsValidationWithRules(['user' => $expect], $subject);
     }
 
-    /**
-     * @testWith [[], {"digit": [":value"]}]
-     *           [["required"], {"digit": [":value"], "not_empty": [":value"]}]
-     *           [{"step": 1}, {"digit": [":value"]}]
-     *           [{"min": 15, "step": 1}, {"digit": [":value"], "Ingenerator\\PHPUtils\\Validation\\ValidNumber::minimum": [":value", 15]}]
-     */
+    #[TestWith([[], ['digit' => [':value']]])]
+    #[TestWith([['required'], ['digit' => [':value'], 'not_empty' => [':value']]])]
+    #[TestWith([['step' => 1], ['digit' => [':value']]])]
+    #[TestWith([['min' => 15, 'step' => 1], ['digit' => [':value'], 'Ingenerator\PHPUtils\Validation\ValidNumber::minimum' => [':value', 15]]])]
     public function test_it_builds_validation_with_constraints_for_number_text_field(
         $constraints,
         $expect
@@ -156,10 +160,8 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         $this->assertBuildsValidationWithRules(['f' => $expect], $subject);
     }
 
-    /**
-     * @testWith [[], []]
-     *           [["required"], {"not_empty": [":value"]}]
-     */
+    #[TestWith([[], []])]
+    #[TestWith([['required'], ['not_empty' => [':value']]])]
     public function test_it_builds_validation_with_constraints_for_textarea($constraints, $expect)
     {
         $form    = $this->givenFormWithElements(
@@ -178,10 +180,8 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    /**
-     * @testWith [[], {"Ingenerator\\PHPUtils\\Validation\\StrictDate::date_immutable": [":value"]}]
-     *           [["required"], {"Ingenerator\\PHPUtils\\Validation\\StrictDate::date_immutable": [":value"], "not_empty": [":value"]}]
-     */
+    #[TestWith([[], ['Ingenerator\PHPUtils\Validation\StrictDate::date_immutable' => [':value']]])]
+    #[TestWith([['required'], ['Ingenerator\PHPUtils\Validation\StrictDate::date_immutable' => [':value'], 'not_empty' => [':value']]])]
     public function test_it_builds_validation_with_constraints_for_date($constraints, $expect)
     {
         $form    = $this->givenFormWithElements(
@@ -196,10 +196,8 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         $this->assertBuildsValidationWithRules(['some_date' => $expect], $subject);
     }
 
-    /**
-     * @testWith [[], {"in_array": [":value", [1,9,14]]}]
-     *           [["required"], {"in_array": [":value", [1,9,14]], "not_empty": [":value"]}]
-     */
+    #[TestWith([[], ['in_array' => [':value', [1, 9, 14]]]])]
+    #[TestWith([['required'], ['in_array' => [':value', [1, 9, 14]], 'not_empty' => [':value']]])]
     public function test_it_builds_validation_with_constraints_for_grouped_choice(
         $constraints,
         $expect
@@ -231,10 +229,8 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         $this->assertBuildsValidationWithRules(['some_choice' => $expect], $subject);
     }
 
-    /**
-     * @testWith [[], {"in_array": [":value", [1,9,8]]}]
-     *           [["required"], {"in_array": [":value", [1,9,8]], "not_empty": [":value"]}]
-     */
+    #[TestWith([[], ['in_array' => [':value', [1, 9, 8]]]])]
+    #[TestWith([['required'], ['in_array' => [':value', [1, 9, 8]], 'not_empty' => [':value']]])]
     public function test_it_builds_validation_with_constraints_for_simple_choice(
         $constraints,
         $expect
@@ -256,10 +252,8 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         $this->assertBuildsValidationWithRules(['some_choice' => $expect], $subject);
     }
 
-    /**
-     * @testWith [[], {"in_array": [":value", [1,9,8]]}]
-     *           [["required"], {"in_array": [":value", [1,9,8]], "not_empty": [":value"]}]
-     */
+    #[TestWith([[], ['in_array' => [':value', [1, 9, 8]]]])]
+    #[TestWith([['required'], ['in_array' => [':value', [1, 9, 8]], 'not_empty' => [':value']]])]
     public function test_it_builds_validation_with_constraints_for_choice_radio(
         $constraints,
         $expect
@@ -335,7 +329,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function provider_full_validation_test()
+    public static function provider_full_validation_test(): array
     {
         // This does not need to test all the varying combinations of constraints
         // it is enough just to test that it is clearly passing the form data into the validator
@@ -444,9 +438,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider provider_full_validation_test
-     */
+    #[DataProvider('provider_full_validation_test')]
     public function test_it_validates_with_assigned_form_data_and_adds_errors_to_form(
         $elements,
         $data,
@@ -470,27 +462,17 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function newSubject()
+    protected function newSubject(): FormValidator
     {
         return new FormValidator;
     }
 
-    /**
-     * @param array $element,...
-     *
-     * @return \Ingenerator\Form\Form
-     */
-    protected function givenFormWithElements($element)
+    protected function givenFormWithElements(array ...$element): Form
     {
-        return $this->givenFormWithElementArray(\func_get_args());
+        return $this->givenFormWithElementArray(func_get_args());
     }
 
-    /**
-     * @param array $elements
-     *
-     * @return \Ingenerator\Form\Form
-     */
-    protected function givenFormWithElementArray(array $elements)
+    protected function givenFormWithElementArray(array $elements): Form
     {
         $default_props = [
             'body-text'        => [],
@@ -551,9 +533,9 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $elements = \array_map(
+        $elements = array_map(
             function ($element) use ($default_props) {
-                return \array_merge(\Arr::get($default_props, $element['type'], []), $element);
+                return array_merge(Arr::get($default_props, $element['type'], []), $element);
             },
             $elements
         );
@@ -564,7 +546,7 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function assertBuildsValidationWithRules($expect, FormValidator $subject)
+    protected function assertBuildsValidationWithRules($expect, FormValidator $subject): void
     {
         // Working proof of all the style validations in one method. It's OK because this will be
         // going soon when we implement a real validator.
@@ -573,21 +555,15 @@ class FormValidatorTest extends \PHPUnit\Framework\TestCase
         $this->assertThat($validator, new ValidationRulesMatch($expect));
     }
 
-    /**
-     * @param $form
-     *
-     * @return array
-     */
-    protected function getFormErrors($form)
+    protected function getFormErrors(Form $form): array
     {
         $errors = [];
         foreach ($form->elements as $element) {
-            /** @var \Ingenerator\Form\Element\Field\AbstractFormField $element */
+            /** @var AbstractFormField $element */
             $errors[$element->name] = $element->errors;
         }
-        $errors = \array_filter($errors);
 
-        return $errors;
+        return array_filter($errors);
     }
 
 }

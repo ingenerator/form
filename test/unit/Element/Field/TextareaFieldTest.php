@@ -7,14 +7,18 @@
 namespace test\unit\Ingenerator\Form\Element\Field;
 
 
+use Ingenerator\Form\Element\Field\TextareaField;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTestCase;
 use Ingenerator\Form\Util\FormDataArray;
+use PHPUnit\Framework\Attributes\TestWith;
+use function array_merge;
 
-class TextareaFieldTest extends BaseFieldTest
+class TextareaFieldTest extends BaseFieldTestCase
 {
     public function test_it_is_initialisable_from_schema_array()
     {
         $this->assertInstanceOf(
-            \Ingenerator\Form\Element\Field\TextareaField::class,
+            TextareaField::class,
             $this->newSubject()
         );
     }
@@ -24,7 +28,7 @@ class TextareaFieldTest extends BaseFieldTest
         $this->assertSame('', $this->newSubject()->html_value);
     }
 
-    public function provider_valid_options_and_defaults()
+    public static function provider_valid_options_and_defaults(): array
     {
         $defaults   = parent::provider_valid_options_and_defaults();
         $defaults['rows'] = ['rows', NULL, 10];
@@ -32,10 +36,8 @@ class TextareaFieldTest extends BaseFieldTest
         return $defaults;
     }
 
-    /**
-     * @testWith [{"constraints": ["required"]}]
-     *           [{"constraints": {"maxlength": "30"}}]
-     */
+    #[TestWith([['constraints' => ['required']]])]
+    #[TestWith([['constraints' => ['maxlength' => 30]]])]
     public function test_it_accepts_html5_constraints($schema)
     {
         $subject = $this->newSubject($schema);
@@ -47,12 +49,10 @@ class TextareaFieldTest extends BaseFieldTest
         $this->markTestIncomplete();
     }
 
-    /**
-     * @testWith [{}, "", null]
-     *           [{"field": ""}, "", null]
-     *           [{"field": "0"}, "0", null]
-     *           [{"field": "anything"}, "anything", "anything"]
-     */
+    #[TestWith([[], '', null])]
+    #[TestWith([['field' => ''], '', null])]
+    #[TestWith([['field' => '0'], '0', null])]
+    #[TestWith([['field' => 'anything'], 'anything', 'anything'])]
     public function test_it_assigns_values(array $values, $expect_html, $expect_display)
     {
         $subject = $this->newSubject(['name' => 'field']);
@@ -61,11 +61,9 @@ class TextareaFieldTest extends BaseFieldTest
         $this->assertSame($expect_display, $subject->display_value, 'Should have display value');
     }
 
-    /**
-     * @testWith ["", null]
-     *           ["anything", "anything"]
-     *           ["0", "0"]
-     */
+    #[TestWith(['', null])]
+    #[TestWith(['anything', 'anything'])]
+    #[TestWith(['0', '0'])]
     public function test_it_maps_html_value_to_null_or_string_for_collection($html_value, $expect)
     {
         $subject = $this->newSubject(['name' => 'field']);
@@ -74,10 +72,11 @@ class TextareaFieldTest extends BaseFieldTest
         $this->assertCollectsValues(['field' => $expect], $subject);
     }
 
-    /**
-     * @testWith ["any stuff", 2]
-     *           ["any\nstuff\non\nmultiple lines", 5]
-     */
+    #[TestWith(['any stuff', 2])]
+    #[TestWith(['any
+stuff
+on
+multiple lines', 5])]
     public function test_with_no_row_count_it_has_enough_rows_to_fit_its_content(
         $value,
         $expect_rows
@@ -94,19 +93,14 @@ class TextareaFieldTest extends BaseFieldTest
         $this->assertSame(5, $subject->rows);
     }
 
-    /**
-     * @param array $values
-     *
-     * @return \Ingenerator\Form\Element\Field\TextareaField
-     */
-    protected function newSubject(array $values = [])
+    protected function newSubject(array $values = []): TextareaField
     {
         $default = [
             'name'  => 'foofield',
             'label' => 'What\'s the best foo?'
         ];
 
-        return new \Ingenerator\Form\Element\Field\TextareaField(\array_merge($default, $values));
+        return new TextareaField(array_merge($default, $values));
     }
 
 }

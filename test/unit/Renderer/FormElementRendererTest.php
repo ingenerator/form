@@ -16,19 +16,21 @@ use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\Renderer\FormElementRenderer;
 use Ingenerator\Form\Renderer\UndefinedTemplateException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
+use PHPUnit\Framework\TestCase;
+use function array_merge;
+use function file_put_contents;
+use function sys_get_temp_dir;
+use function tempnam;
+use function unlink;
 
-class FormElementRendererTest extends \PHPUnit\Framework\TestCase
+class FormElementRendererTest extends TestCase
 {
 
-    /**
-     * @var \Ingenerator\Form\FormConfig
-     */
-    protected $config;
+    protected FormConfig $config;
 
-    /**
-     * @var string
-     */
-    protected $render_mode = 'edit';
+    protected string $render_mode = 'edit';
 
     private FieldCriteriaMatcher $matcher;
 
@@ -70,7 +72,7 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertStringContainsString('What is your name?', $output);
-        $this->assertFalse($this->hasOutput(), 'Should not have output anything directly');
+        $this->assertFalse($this->hasUnexpectedOutput(), 'Should not have output anything directly');
     }
 
     public function test_it_returns_combined_output_of_template_for_field_with_children()
@@ -94,11 +96,11 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
 
     public function test_it_renders_custom_form_class_with_custom_template_if_mapped()
     {
-        $tmp_file     = \tempnam(\sys_get_temp_dir(), 'render-test-php');
+        $tmp_file     = tempnam(sys_get_temp_dir(), 'render-test-php');
         $this->config = FormConfig::withDefaults(
             ['template_map' => [RenderTestForm::class => ['edit' => $tmp_file]]]
         );
-        \file_put_contents($tmp_file, 'I am the walrus');
+        file_put_contents($tmp_file, 'I am the walrus');
         try {
             $form   = new RenderTestForm(
                 ['elements' => [['type' => 'text', 'name' => 'foo', 'label' => 'foo']]],
@@ -107,7 +109,7 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
             $output = $this->newSubject()->render($form);
 
         } finally {
-            \unlink($tmp_file);
+            unlink($tmp_file);
         }
 
         $this->assertSame('I am the walrus', $output);
@@ -132,10 +134,8 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
         $this->assertStringContainsString('Barry', $output);
     }
 
-    /**
-     * @testWith ["edit", "<input"]
-     *           ["display", "form-answer-group"]
-     */
+    #[TestWith(['edit', '<input'])]
+    #[TestWith(['display', 'form-answer-group'])]
     public function test_it_selects_template_based_on_configured_render_mode($mode, $expect_output)
     {
         $this->render_mode = $mode;
@@ -146,7 +146,7 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
         $this->assertStringContainsString($expect_output, $output);
     }
 
-    public function provider_highlighter_classes()
+    public static function provider_highlighter_classes(): array
     {
         return [
             [
@@ -173,9 +173,7 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    /**
-     * @dataProvider provider_highlighter_classes
-     */
+    #[DataProvider('provider_highlighter_classes')]
     public function test_it_can_give_highlight_classes_for_field_criteria(
         $criteria,
         $value,
@@ -183,7 +181,7 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
     ) {
         $this->matcher = new FieldCriteriaMatcher;
         $field         = new TextField(
-            \array_merge(['label' => 'Name?', 'name' => 'name'], $criteria)
+            array_merge(['label' => 'Name?', 'name' => 'name'], $criteria)
         );
         $this->assertEquals($expect, $this->newSubject()->getHighlightClasses($value, $field));
     }
@@ -194,15 +192,12 @@ class FormElementRendererTest extends \PHPUnit\Framework\TestCase
         $this->config = FormConfig::withDefaults();
     }
 
-    protected function newSubject()
+    protected function newSubject(): FormElementRenderer
     {
         return new FormElementRenderer($this->config, $this->render_mode);
     }
 
-    /**
-     * @return \Ingenerator\Form\FormElementFactory
-     */
-    protected function getElementFactory()
+    protected function getElementFactory(): FormElementFactory
     {
         return new FormElementFactory(FormConfig::withDefaults());
     }

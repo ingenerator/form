@@ -15,13 +15,11 @@ use Ingenerator\Form\FormConfig;
 use Ingenerator\Form\FormElementFactory;
 use Ingenerator\Form\UndefinedFieldTypeException;
 use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
-class FormElementFactoryTest extends \PHPUnit\Framework\TestCase
+class FormElementFactoryTest extends TestCase
 {
-    /**
-     * @var \Ingenerator\Form\FormConfig
-     */
-    protected $config;
+    protected FormConfig $config;
 
     public function test_it_is_initialisable()
     {
@@ -93,9 +91,9 @@ class FormElementFactoryTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
-     * @return \Ingenerator\Form\FormElementFactory
+     * @return FormElementFactory
      */
-    protected function newSubject()
+    protected function newSubject(): FormElementFactory
     {
         return new FormElementFactory($this->config);
     }
@@ -104,7 +102,7 @@ class FormElementFactoryTest extends \PHPUnit\Framework\TestCase
         $expect_class,
         $expect_name,
         AbstractFormField $field
-    ) {
+    ): void {
         $this->assertInstanceOf($expect_class, $field);
         $this->assertEquals($expect_name, $field->name);
     }

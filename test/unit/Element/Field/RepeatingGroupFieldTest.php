@@ -7,21 +7,26 @@
 namespace test\unit\Ingenerator\Form\Element\Field;
 
 
+use Ingenerator\Form\Element\Field\AbstractFormField;
 use Ingenerator\Form\Element\Field\RepeatingGroupField;
 use Ingenerator\Form\Element\Field\TextField;
+use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTestCase;
 use Ingenerator\Form\Util\FormDataArray;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\TestWith;
+use function array_merge;
+use function get_class;
 
-class RepeatingGroupFieldTest extends BaseFieldTest
+class RepeatingGroupFieldTest extends BaseFieldTestCase
 {
     public function test_it_is_initialisable()
     {
         $this->assertInstanceOf(RepeatingGroupField::class, $this->newSubject());
     }
 
-    public function provider_required_options()
+    public static function provider_required_options(): array
     {
-        $required   = parent::provider_required_options();
+        $required   = BaseFieldTestCase::provider_required_options();
         $required[] = ['fields'];
 
         return $required;
@@ -151,7 +156,7 @@ class RepeatingGroupFieldTest extends BaseFieldTest
         $this->assertGroupFieldsEqual(
             [
                 [
-                    ['class' => \Ingenerator\Form\Element\Field\TextField::class, 'name' => 'jobs[0][title]', 'value' => ''],
+                    ['class' => TextField::class, 'name' => 'jobs[0][title]', 'value' => ''],
                     ['class' => TextField::class, 'name' => 'jobs[0][boss]', 'value' => ''],
                 ],
             ],
@@ -160,11 +165,9 @@ class RepeatingGroupFieldTest extends BaseFieldTest
 
     }
 
-    /**
-     * @testWith [{}, [{"title": null, "boss": null}]]
-     *           [{"1": {"title": "Leader", "boss": "CEO"}}, {"1":{"title": "Leader", "boss": "CEO"}}]
-     *           [{"1": {"title": "Leader", "boss": "CEO"}, "9":{"title": "CEO", "boss": "Board"}}, {"1": {"title": "Leader", "boss": "CEO"}, "9":{"title": "CEO", "boss": "Board"}}]
-     */
+    #[TestWith([[], [['title' => null, 'boss' => null]]])]
+    #[TestWith([[['title' => 'Leader', 'boss' => 'CEO']], [['title' => 'Leader', 'boss' => 'CEO']]])]
+    #[TestWith([[['title' => 'Leader', 'boss' => 'CEO'], ['title' => 'CEO', 'boss' => 'Board']], [['title' => 'Leader', 'boss' => 'CEO'], ['title' => 'CEO', 'boss' => 'Board']]])]
     public function test_it_collects_values_from_all_group_fields($assign, $expect)
     {
         $subject = $this->newSubject(
@@ -203,12 +206,7 @@ class RepeatingGroupFieldTest extends BaseFieldTest
         $this->markTestIncomplete();
     }
 
-    /**
-     * @param array $values
-     *
-     * @return \Ingenerator\Form\Element\Field\RepeatingGroupField
-     */
-    protected function newSubject(array $values = [])
+    protected function newSubject(array $values = []): RepeatingGroupField
     {
         $default = [
             'name'   => 'education',
@@ -218,21 +216,17 @@ class RepeatingGroupFieldTest extends BaseFieldTest
             ]
         ];
 
-        return new \Ingenerator\Form\Element\Field\RepeatingGroupField(\array_merge($default, $values), $this->getElementFactory());
+        return new RepeatingGroupField(array_merge($default, $values), $this->getElementFactory());
     }
 
-    /**
-     * @param $expect
-     * @param $groups
-     */
-    protected function assertGroupFieldsEqual(array $expect, array $groups)
+    protected function assertGroupFieldsEqual(array $expect, array $groups): void
     {
         $actual = [];
         foreach ($groups as $index => $group) {
             foreach ($group as $field) {
-                /** @var \Ingenerator\Form\Element\Field\AbstractFormField $field */
+                /** @var AbstractFormField $field */
                 $actual[$index][] = [
-                    'class' => \get_class($field),
+                    'class' => get_class($field),
                     'name'  => $field->name,
                     'value' => $field->html_value
                 ];
@@ -241,7 +235,4 @@ class RepeatingGroupFieldTest extends BaseFieldTest
         $this->assertEquals($expect, $actual);
     }
 
-
 }
-
-
