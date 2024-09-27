@@ -1,6 +1,9 @@
 ### Unreleased
 
+## v2.0.0 (2024-09-27)
+
 * Support PHP 8.3
+* [BREAKING] Tests are now excluded from the built package, base test cases intended to be part of the public interface have moved to the TestSupport namespace
 
 ## v1.5.0 (2024-02-08)
 
