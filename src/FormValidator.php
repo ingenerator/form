@@ -164,7 +164,7 @@ class FormValidator
      * @param string     $rule
      * @param array|NULL $options
      */
-    protected function addRule($fieldname, $label, $rule, array $options = NULL)
+    protected function addRule($fieldname, $label, $rule, ?array $options = NULL)
     {
         $this->validator->label($fieldname, $label);
         $this->validator->rule($fieldname, $rule, $options);

@@ -31,5 +31,6 @@ README  text eol=lf
 # Ignore paths that should not be included in an archive (eg for a distribution version)
 /.github export-ignore
 /test export-ignore
+/bootstrap.php export-ignore
 /koharness.php export-ignore
 /phpunit.xml export-ignore
