@@ -42,7 +42,7 @@ class FormConfig
      *
      * @return static
      */
-    public static function withDefaults(array $override = NULL)
+    public static function withDefaults(?array $override = NULL)
     {
         $tpl_dir = \realpath(__DIR__.'/../field_templates/default');
 
