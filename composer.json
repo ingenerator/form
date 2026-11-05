@@ -18,7 +18,7 @@
     "ingenerator/php-utils": "^1.6 || ^2.0"
   },
   "require-dev": {
-    "kohana/koharness": "dev-master",
+    "ext-mbstring": "*",
     "phpunit/phpunit": "^11.5",
     "ergebnis/phpunit-slow-test-detector": "^2.15"
   },
