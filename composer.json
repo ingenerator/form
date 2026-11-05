@@ -19,8 +19,8 @@
   },
   "require-dev": {
     "ext-mbstring": "*",
-    "phpunit/phpunit": "^11.5",
-    "ergebnis/phpunit-slow-test-detector": "^2.15"
+    "ergebnis/phpunit-slow-test-detector": "^2.15",
+    "phpunit/phpunit": "^13.4"
   },
   "suggest": {
     "ingenerator/showgroup": "javascript support to show/hide form sections based on values"
