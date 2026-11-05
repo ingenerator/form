@@ -12,10 +12,10 @@
     }
   ],
   "require": {
-    "php": "~8.4.0",
+    "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
     "ingenerator/kohana-core": "^4.7",
-    "ingenerator/kohana-extras": "^2.0 || ^3.0",
-    "ingenerator/php-utils": "^1.6 || ^2.0"
+    "ingenerator/kohana-extras": "^3.0 || dev-support-php85@dev",
+    "ingenerator/php-utils": "^2.0 || ^3.0"
   },
   "require-dev": {
     "ext-mbstring": "*",
