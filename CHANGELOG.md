@@ -1,5 +1,6 @@
 ### Unreleased
 
+* Drop support for PHP 8.2 and PHP 8.3
 * Support validating `min` and `max` constraints for Date fields.
 * [BREAKING] DateField now always returns the value as a string - this is expected to be in Y-m-d format, but it is up
   to the consumer to validate that and convert to a DateTimeImmutable as required.
