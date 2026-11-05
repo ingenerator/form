@@ -4,5 +4,4 @@
 Thumbs.db
 thumbs.db
 /composer.lock
-/koharness_bootstrap.php
 .phpunit.result.cache
