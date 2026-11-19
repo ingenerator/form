@@ -16,6 +16,7 @@ use Ingenerator\Form\FormValidator;
 use Ingenerator\Form\UnsupportedValidationException;
 use Ingenerator\KohanaExtras\Validation\TestConstraint\ValidationRulesMatch;
 use Ingenerator\PHPUtils\Object\ObjectPropertyRipper;
+use Ingenerator\PHPUtils\Validation\StrictDate;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
@@ -180,9 +181,26 @@ class FormValidatorTest extends TestCase
         }
     }
 
-    #[TestWith([[], ['Ingenerator\PHPUtils\Validation\StrictDate::date_immutable' => [':value']]])]
-    #[TestWith([['required'], ['Ingenerator\PHPUtils\Validation\StrictDate::date_immutable' => [':value'], 'not_empty' => [':value']]])]
-    public function test_it_builds_validation_with_constraints_for_date($constraints, $expect)
+    public static function providerValidateDate(): iterable
+    {
+        yield 'no constraints' => [
+            [],
+            [
+                'Ingenerator\PHPUtils\Validation\StrictDate::iso_date' => [':value'],
+            ],
+        ];
+
+        yield 'required value' => [
+            ['required'],
+            [
+                'Ingenerator\PHPUtils\Validation\StrictDate::iso_date' => [':value'],
+                'not_empty' => [':value'],
+            ],
+        ];
+    }
+
+    #[DataProvider('providerValidateDate')]
+    public function test_it_builds_validation_with_constraints_for_date(array $constraints, array $expect)
     {
         $form    = $this->givenFormWithElements(
             [
@@ -194,6 +212,252 @@ class FormValidatorTest extends TestCase
         $subject = $this->newSubject();
         $subject->validate($form);
         $this->assertBuildsValidationWithRules(['some_date' => $expect], $subject);
+    }
+
+    public static function providerDateValidationActualBehaviour(): iterable
+    {
+        yield from self::providerDateConstraintsEmpty();
+        yield from self::providerDateConstraintsRequired();
+        yield from self::providerDateConstraintsMin();
+        yield from self::providerDateConstraintsMax();
+        yield from self::providerDateConstraintsMinAndMax();
+    }
+
+    private static function providerDateConstraintsEmpty(): iterable
+    {
+        yield 'no constraints: empty' => [
+            [],
+            [],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'no constraints: valid date string' => [
+            [],
+            ['somedate' => '2026-02-01'],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'no constraints: invalid date string' => [
+            [],
+            ['somedate' => '2026-02-31'],
+            [
+                'isValid' => false,
+                'errors' => [
+                    'somedate' => ['validation.somedate.'.StrictDate::rule('iso_date')],
+                ],
+            ],
+        ];
+
+        yield 'no constraints: bad date format' => [
+            [],
+            ['somedate' => '3/9/2026'],
+            [
+                'isValid' => false,
+                'errors' => [
+                    'somedate' => ['validation.somedate.'.StrictDate::rule('iso_date')],
+                ],
+            ],
+        ];
+    }
+
+    private static function providerDateConstraintsRequired(): iterable
+    {
+        yield 'required: empty' => [
+            ['required'],
+            [],
+            [
+                'isValid' => false,
+                'errors' => [
+                    'somedate' => ['Any date must not be empty'],
+                ],
+            ],
+        ];
+
+        yield 'required: valid date string' => [
+            ['required'],
+            ['somedate' => '2026-02-01'],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'required: bad date format' => [
+            ['required'],
+            ['somedate' => '3/9/2026'],
+            [
+                'isValid' => false,
+                'errors' => [
+                    'somedate' => ['validation.somedate.'.StrictDate::rule('iso_date')],
+                ],
+            ],
+        ];
+
+    }
+
+    private static function providerDateConstraintsMin(): iterable
+    {
+        $constraints = ['min' => '2026-04-02'];
+
+        yield 'min (but not required), empty' => [
+            $constraints,
+            [''],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'min: with invalid submitted value' => [
+            $constraints,
+            ['somedate' => 'invalid'],
+            [
+                'isValid' => false,
+                'errors' => [
+                    'somedate' => ['validation.somedate.'.StrictDate::rule('iso_date')],
+                ],
+            ],
+        ];
+
+        yield 'min: before minimum' => [
+            $constraints,
+            ['somedate' => '2026-04-01'],
+            [
+                'isValid' => false,
+                'errors' => ['somedate' => ['validation.somedate.Ingenerator\Form\Validation\DateValidation::onOrAfter']],
+            ],
+        ];
+
+        yield 'min: exactly minimum' => [
+            $constraints,
+            ['somedate' => $constraints['min']],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'min: after minimum' => [
+            $constraints,
+            ['somedate' => '2026-04-03'],
+            ['isValid' => true, 'errors' => []],
+        ];
+    }
+
+    private static function providerDateConstraintsMax(): iterable
+    {
+        $constraints = ['max' => '2026-04-02'];
+
+        yield 'max (but not required), empty' => [
+            $constraints,
+            [''],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'max: with invalid submitted value' => [
+            $constraints,
+            ['somedate' => 'invalid'],
+            [
+                'isValid' => false,
+                'errors' => [
+                    'somedate' => ['validation.somedate.'.StrictDate::rule('iso_date')],
+                ],
+            ],
+        ];
+
+        yield 'max: before maximum' => [
+            $constraints,
+            ['somedate' => '2026-04-01'],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'max: exactly maximum' => [
+            $constraints,
+            ['somedate' => $constraints['max']],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'max: after maximum' => [
+            $constraints,
+            ['somedate' => '2026-04-03'],
+            [
+                'isValid' => false,
+                'errors' => ['somedate' => ['validation.somedate.Ingenerator\Form\Validation\DateValidation::onOrBefore']],
+            ],
+        ];
+    }
+
+    private static function providerDateConstraintsMinAndMax(): iterable
+    {
+        $constraints = ['min' => '2025-02-01', 'max' => '2026-04-02'];
+
+        yield 'min & max (but not required), empty' => [
+            $constraints,
+            [],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'min & max: with invalid submitted value' => [
+            $constraints,
+            ['somedate' => 'invalid'],
+            [
+                'isValid' => false,
+                'errors' => [
+                    'somedate' => ['validation.somedate.'.StrictDate::rule('iso_date')],
+                ],
+            ],
+        ];
+
+        yield 'min & max: before minimum' => [
+            $constraints,
+            ['somedate' => '2025-01-31'],
+            [
+                'isValid' => false,
+                'errors' => ['somedate' => ['validation.somedate.Ingenerator\Form\Validation\DateValidation::between']],
+            ],
+        ];
+
+        yield 'min & max: exactly minimum' => [
+            $constraints,
+            ['somedate' =>  $constraints['min']],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'min & max: within range' => [
+            $constraints,
+            ['somedate' => '2025-10-13'],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'min & max: exactly maximum' => [
+            $constraints,
+            ['somedate' => $constraints['max']],
+            ['isValid' => true, 'errors' => []],
+        ];
+
+        yield 'min & max: after maximum' => [
+            $constraints,
+            ['somedate' => '2026-04-03'],
+            [
+                'isValid' => false,
+                'errors' => ['somedate' => ['validation.somedate.Ingenerator\Form\Validation\DateValidation::between']],
+            ],
+        ];
+    }
+
+
+    #[DataProvider('providerDateValidationActualBehaviour')]
+    public function testDateFieldValidationWorksAsExpected(array $constraints, array $data, array $expectValidationResult)
+    {
+        $form = $this->givenFormWithElements(
+            [
+                'type' => 'date',
+                'name' => 'somedate',
+                'constraints' => $constraints,
+            ],
+        );
+        $form->setValues($data);
+
+        $subject = $this->newSubject();
+        $isValid = $subject->validate($form);
+        $this->assertSame(
+            $expectValidationResult,
+            [
+                'isValid' => $isValid,
+                'errors' => $this->getFormErrors($form),
+            ],
+        );
     }
 
     #[TestWith([[], ['in_array' => [':value', [1, 9, 14]]]])]
