@@ -17,6 +17,7 @@ use Ingenerator\Form\Element\Field\TextareaField;
 use Ingenerator\Form\Element\Field\TextField;
 use Ingenerator\Form\Element\FormGroupElement;
 use Ingenerator\Form\Util\FormDataArray;
+use Ingenerator\Form\Validation\DateValidation;
 use Ingenerator\KohanaExtras\Validation\ImmutableKohanaValidation;
 use Ingenerator\PHPUtils\Validation\StrictDate;
 use Ingenerator\PHPUtils\Validation\ValidNumber;
@@ -220,10 +221,33 @@ class FormValidator
 
     protected function addDateFieldRules(DateField $field)
     {
-        $constraints = $this->listSupportedConstraints($field, ['required']);
+        $constraints = $this->listSupportedConstraints($field, ['required', 'min', 'max']);
         $this->addRule($field->name, $field->label, StrictDate::rule('iso_date'));
         if (isset($constraints['required'])) {
             $this->addRule($field->name, $field->label, 'not_empty');
+        }
+
+        if (isset($constraints['min']) && isset($constraints['max'])) {
+            $this->addRule(
+                $field->name,
+                $field->label,
+                DateValidation::class.'::between',
+                [':value', $constraints['min'], $constraints['max']],
+            );
+        } else if (isset($constraints['min'])) {
+            $this->addRule(
+                $field->name,
+                $field->label,
+                DateValidation::class.'::onOrAfter',
+                [':value', $constraints['min']],
+            );
+        } else if (isset($constraints['max'])) {
+            $this->addRule(
+                $field->name,
+                $field->label,
+                DateValidation::class.'::onOrBefore',
+                [':value', $constraints['max']],
+            );
         }
     }
 

@@ -7,7 +7,9 @@
 namespace Ingenerator\Form\Element\Field;
 
 use DateTimeImmutable;
+use Exception;
 use Ingenerator\Form\Util\FormDataArray;
+use Ingenerator\PHPUtils\DateTime\DateString;
 use Ingenerator\PHPUtils\DateTime\DateTimeImmutableFactory;
 use InvalidArgumentException;
 
@@ -17,7 +19,46 @@ class DateField extends AbstractFormField
 
     public function validateConstraintSchema(array $constraints)
     {
-        // Temporarily accept anything
+        $min = $this->parseDateConstraintValue($constraints, 'min');
+        $max = $this->parseDateConstraintValue($constraints, 'max');
+        if ($min && $max && $max < $min) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    "max must be greater than min (got min=%s, max=%s for %s)",
+                    DateString::ymd($max),
+                    DateString::ymd($min),
+                    $this->name,
+                ),
+            );
+        }
+    }
+
+    private function parseDateConstraintValue(array $constraints, string $key): ?DateTimeImmutable
+    {
+        $value = $constraints[$key] ?? null;
+        if ($value === null) {
+            return null;
+        }
+
+        if (!is_string($value)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '%s constraint must be a string, got %s for %s',
+                    $key,
+                    get_debug_type($value),
+                    $this->name,
+                ),
+            );
+        }
+
+        try {
+            return DateTimeImmutableFactory::fromStrictFormat($value, 'Y-m-d');
+        } catch (Exception $e) {
+            throw new InvalidArgumentException(
+                sprintf('%s constraint must be a valid Y-m-d date string, got %s for %s', $key, $value, $this->name),
+                previous: $e,
+            );
+        }
     }
 
     /**

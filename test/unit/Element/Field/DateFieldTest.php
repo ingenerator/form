@@ -12,6 +12,7 @@ use Ingenerator\Form\Element\Field\DateField;
 use Ingenerator\Form\TestSupport\PHPUnit10\BaseFieldTestCase;
 use Ingenerator\Form\Util\FormDataArray;
 use Ingenerator\PHPUtils\DateTime\InvalidUserDateTime;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use function array_merge;
@@ -26,16 +27,74 @@ class DateFieldTest extends BaseFieldTestCase
         );
     }
 
-    #[TestWith([['constraints' => ['required']]])]
-    public function test_it_accepts_html5_constraints($schema)
+    public static function providerHtml5Constraints(): iterable
     {
-        $subject = $this->newSubject($schema);
-        $this->assertSame($schema['constraints'], $subject->constraints);
+        yield 'valid with no constraints' => [
+            [],
+            false,
+        ];
+
+        yield 'validate with arbitrary custom constraints' => [
+            ['some-other-attr' => 'whatever'],
+            false
+        ];
+
+        yield 'valid with required' => [
+            ['required'],
+            false,
+        ];
+
+        yield 'valid with valid min' => [
+            ['min' => '2026-03-04'],
+            false,
+        ];
+
+        yield 'valid with valid max' => [
+            ['max' => '2026-09-01'],
+            false,
+        ];
+
+        yield 'valid with required, min, max' => [
+            ['min' => '2026-03-04', 'max' => '2026-04-09', 'required'],
+            false,
+        ];
+
+        yield 'valid with same min & max' => [
+            // Why you'd need this (basically forces the field to a single date) is unclear but it is a valid constraint
+            ['min' => '2026-03-04', 'max' => '2026-03-04'],
+            false,
+        ];
+
+
+        yield 'throws with invalid `min`' => [
+            ['min' => '2026-02-31'],
+            'min constraint must be a valid Y-m-d date string, got 2026-02-31 for some-field',
+        ];
+
+        yield 'throws with invalid `max`' => [
+            ['max' => '03/02/2026'],
+            'max constraint must be a valid Y-m-d date string, got 03/02/2026 for some-field',
+        ];
+
+        yield 'throws if `max` is before `min`' => [
+            ['min' => '2026-01-02', 'max' => '2026-01-01'],
+            'max must be greater than min (got min=2026-01-01, max=2026-01-02 for some-field)',
+        ];
     }
 
-    public function test_it_throws_with_invalid_html5_constraints()
+    #[DataProvider('providerHtml5Constraints')]
+    public function testItAcceptsAndValidatesHtml5Constraints(array $constraints, false|string $expectThrows): void
     {
-        $this->markTestIncomplete();
+        if ($expectThrows !== false) {
+            $this->expectException(InvalidArgumentException::class);
+            $this->expectExceptionMessage($expectThrows);
+        }
+
+        $subject = $this->newSubject(['constraints' => $constraints, 'name' => 'some-field']);
+
+        if ($expectThrows === false) {
+            $this->assertSame($subject->constraints, $constraints);
+        }
     }
 
     public function test_its_default_html_value_is_empty_string()
