@@ -6,8 +6,10 @@
 
 namespace Ingenerator\Form\Element\Field;
 
+use DateTimeImmutable;
 use Ingenerator\Form\Util\FormDataArray;
 use Ingenerator\PHPUtils\DateTime\DateTimeImmutableFactory;
+use InvalidArgumentException;
 
 
 class DateField extends AbstractFormField
@@ -19,7 +21,7 @@ class DateField extends AbstractFormField
     }
 
     /**
-     * Initialises a value from either a model (expects \DateTimeImmutable) or an incoming
+     * Initialises a value from either a model (expects DateTimeImmutable) or an incoming
      * HTTP POST string
      *
      * @param \Ingenerator\Form\Util\FormDataArray $post
@@ -27,7 +29,7 @@ class DateField extends AbstractFormField
     public function assignValue(FormDataArray $post)
     {
         $value = $post->getRawValue($this->name);
-        if ($value instanceof \DateTimeImmutable) {
+        if ($value instanceof DateTimeImmutable) {
             $this->html_value = $value->format('Y-m-d');
         } else {
             $this->html_value = (string) $value;
@@ -35,18 +37,16 @@ class DateField extends AbstractFormField
     }
 
     /**
-     * Captures the field value as either NULL, an InvalidUserDateTime or a DateTimeImmutable
+     * Captures the field value as either NULL or a string.
+     *
+     * The string is assumed to be in YYYY-MM-DD format - and will be if returned by a valid HTTP POST -
+     * however validating this is a caller concern.
      *
      * @param \Ingenerator\Form\Util\FormDataArray $data
      */
     public function collectValue(FormDataArray $data)
     {
-        // Parses an invalid input to an InvalidUserDateTime as this is required for validation to
-        // mark the field invalid rather than empty because of internal kohana logic around `FALSE`
-        $value = $this->html_value
-            ? DateTimeImmutableFactory::fromYmdInput($this->html_value)
-            : NULL;
-        $data->setFieldValue($this->name, $value);
+        $data->setFieldValue($this->name, $this->html_value === '' ? null : $this->html_value);
     }
 
     public function __get($option)
@@ -60,11 +60,16 @@ class DateField extends AbstractFormField
 
     protected function getDisplayValue()
     {
-        if ($value = $this->html_value) {
-            return DateTimeImmutableFactory::fromYmdInput($this->html_value)->format('j M Y');
+        if (empty($this->html_value)) {
+            return $this->empty_value;
         }
 
-        return $this->empty_value;
+        try {
+            return DateTimeImmutableFactory::fromStrictFormat($this->html_value, 'Y-m-d')
+                ->format('j M Y');
+        } catch (InvalidArgumentException) {
+            return 'Invalid date ('.$this->html_value.')';
+        }
     }
 
 }

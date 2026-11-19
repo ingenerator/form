@@ -1,5 +1,8 @@
 ### Unreleased
 
+* [BREAKING] DateField now always returns the value as a string - this is expected to be in Y-m-d format, but it is up
+  to the consumer to validate that and convert to a DateTimeImmutable as required.
+
 ## v2.1.0 (2025-07-22)
 
 * Support PHP 8.4
