@@ -221,7 +221,7 @@ class FormValidator
     protected function addDateFieldRules(DateField $field)
     {
         $constraints = $this->listSupportedConstraints($field, ['required']);
-        $this->addRule($field->name, $field->label, StrictDate::rule('date_immutable'));
+        $this->addRule($field->name, $field->label, StrictDate::rule('iso_date'));
         if (isset($constraints['required'])) {
             $this->addRule($field->name, $field->label, 'not_empty');
         }
